@@ -4,19 +4,19 @@ app = Flask(__name__)
 
 @app.route('/home')
 def home():
-    return render_template("index.html")
+    return render_template("home.html")
 
 @app.route('/login')
 def login():
-    return("This is the Login Page")
+    return render_template("login.html")
 
 @app.route('/host')
 def host():
-    return("This is the Host Page")
+    return render_template("host.html")
 
 @app.route('/attendee')
 def attendee():
-    return("This is the Attendee Page")
+    return render_template("attendee.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

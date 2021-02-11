@@ -16,7 +16,7 @@ class users(db.Model):
         self.password = password
 
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"<User {self.username}, {self.password}>"
 
 
 class eventTable(db.Model):
@@ -38,7 +38,7 @@ class eventTable(db.Model):
         self.event_completed = event_completed
 
     def __repr__(self):
-        return f"<User {self.event_desc}>"
+        return f"<Event {self.event_id}, {self.event_desc}, {self.event_type}, {self.event_start}, {self.self.event_end}, {self.self.event_completed}>"
 
 class eventAttendees(db.Model):
     __tablename__ = 'eventAttendees'
@@ -46,13 +46,25 @@ class eventAttendees(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, db.ForeignKey('users.user_id'), nullable=False)
     event_id = db.Column(db.Integer, primary_key=True, db.ForeignKey('eventTable.event_id'), nullable=False)
     
-
     def __init__(self, user_id, event_id):
         self.user_id = user_id
         self.event_id = event_id
 
     def __repr__(self):
         return f"<Event Attendee {self.user_id},{self.event_id}>"
+
+class eventHosts(db.Model):
+    __tablename__ = 'eventHosts'
+
+    user_id = db.Column(db.Integer, primary_key=True, db.ForeignKey('users.user_id'), nullable=False)
+    event_id = db.Column(db.Integer, primary_key=True, db.ForeignKey('eventTable.event_id'), nullable=False)
+    
+    def __init__(self, user_id, event_id):
+        self.user_id = user_id
+        self.event_id = event_id
+
+    def __repr__(self):
+        return f"<Event Host {self.user_id},{self.event_id}>"
 
 class feedbackQuestions(db.Model):
     __tablename__ = 'feedbackQuestions'
@@ -61,12 +73,11 @@ class feedbackQuestions(db.Model):
     feedback_question = db.Column(db.String(100), nullable=False)
 
     def __init__(self, user_id, username, password):
-        self.user_id = user_id
-        self.username = username
-        self.password = password
+        self.feedback_question_id = feedback_question_id
+        self.feedback_question = feedback_question
 
     def __repr__(self):
-        return f"<User {self.username}>"        
+        return f"<Feedback Question {self.feedback_question_id}, {self.feedback_question}>"        
 
 class feedback(db.Model):
     __tablename__ = 'feedback'
@@ -85,11 +96,10 @@ class feedback(db.Model):
         self.feedback_question_id = feedback_question_id
         self.event_id = event_id
         self.user_id = user_id
-        self.user_id = user_id
         self.message = message
-        self.feedback_date = user_id
+        self.feedback_date = feedback_date
         self.mood = mood
         self.sentiment = sentiment
 
     def __repr__(self):
-        return f"<Feedback {self.user_id},{self.event_id}>"
+        return f"<Feedback {self.feedback_id},{self.feedback_question_id},{self.event_id},{self.user_id},{self.message},{self.user_id},{self.feedback_date},{self.mood},{self.sentiment}>"

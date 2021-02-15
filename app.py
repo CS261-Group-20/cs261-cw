@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect
+from forms import LoginForm, RegistrationForm, SessionCreationForm
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '68279'
 
 @app.route('/')
 def index():
@@ -12,7 +14,19 @@ def home():
 
 @app.route('/login')
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    return render_template("login.html", form = form)
+
+@app.route('/register')
+def register():
+    form = RegistrationForm()
+    return render_template("register.html", form = form)
+
+@app.route('/session_create')
+def session_create():
+    form = SessionCreationForm()
+    return render_template("session_create.html", form = form)
+
 
 @app.route('/host')
 def host():
@@ -21,6 +35,8 @@ def host():
 @app.route('/attendee')
 def attendee():
     return render_template("attendee.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

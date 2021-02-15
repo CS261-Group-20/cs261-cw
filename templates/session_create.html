@@ -9,10 +9,14 @@
 <div class="login-form">
     <form method = "POST" action="home">
         {{form.hidden_tag()}}
-        {{form.username.label}}
-        {{form.username}}<br>
-        {{form.password.label}}
-        {{form.password}}<br>
+        {{form.session_name.label}}
+        {{form.session_name}}<br>
+        {{form.session_type.label}}
+        {{form.session_type}}<br>
+        {{form.session_start.label}}
+        {{form.session_start}}<br>
+        {{form.session_end.label}}
+        {{form.session_end}}<br>
         {{form.submit}}
     </form>
 </div>

@@ -1,8 +1,11 @@
 from flask import Flask, render_template, redirect
+from flask_sqlalchemy import SQLAlchemy
 from forms import LoginForm, RegistrationForm, SessionCreationForm
+from sqlalchemy.engine import create_engine
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
 
 @app.route('/')
 def index():

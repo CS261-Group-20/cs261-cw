@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from datetime import datetime
-db = SQLAlchemy()
-
+from app import app
+db = SQLAlchemy(app)
 
 class users(db.Model):
     __tablename__ = 'users'

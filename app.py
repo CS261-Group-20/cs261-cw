@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect
-from forms import LoginForm, RegistrationForm, SessionCreationForm
+from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
@@ -26,6 +26,11 @@ def register():
 def session_create():
     form = SessionCreationForm()
     return render_template("session_create.html", form = form)
+
+@app.route('/session_join')
+def session_join():
+    form = SessionJoinForm()
+    return render_template("session_join.html", form = form)
 
 
 @app.route('/host')

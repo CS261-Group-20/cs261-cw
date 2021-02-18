@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>This is the Session Join page</h1> 
+{% endblock %}
+
+{% block body %}
+<!-- <p>Change this later, this is very basic html code</p> -->
+<div class="login-form">
+    <form method = "POST" action="home">
+        {{form.hidden_tag()}}
+        {{form.session_code.label}}
+        {{form.session_code}}<br>
+        {{form.submit}}
+    </form>
+</div>
+{% endblock %}

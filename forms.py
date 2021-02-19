@@ -23,3 +23,12 @@ class SessionCreationForm(FlaskForm):
 class SessionJoinForm(FlaskForm):
     session_code = StringField('Session Code',validators=[DataRequired()]) 
     submit = SubmitField('Join Session')
+
+class AttendeeForm(FlaskForm):
+    feedback = StringField('feedback', validators=[DataRequired()])
+    mood_type = RadioField('Mood', choices=[(1, ':D'),(2, ':I'),(3, ':(')],validators=[DataRequired()] )
+    submit = SubmitField('Submit Feedback')
+
+class HostForm(FlaskForm):
+    add_feedback_question = StringField('Add Question', validators=[DataRequired()])
+    submit = SubmitField('Submit Feedback')

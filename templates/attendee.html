@@ -5,5 +5,15 @@
 {% endblock %}
 
 {% block body %}
-<p>Change this later, this is very basic html code</p>
+<!-- <p>Change this later, this is very basic html code</p> -->
+<div class="login-form">
+    <form method = "POST" action="attendee">
+        {{form.hidden_tag()}}
+        {{form.feedback.label}}
+        {{form.feedback}}<br>
+        {{form.mood_type.label}}
+        {{form.mood_type}}<br>
+        {{form.submit}}
+    </form>
+</div>
 {% endblock %}

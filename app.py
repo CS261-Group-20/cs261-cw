@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
 i = 1
 
 
+
 @app.route('/')
 def index():
     return redirect('/home')
@@ -26,6 +27,16 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if request.method == 'POST':
+        username_form = request.form['username']
+        pwd = request.form['password']
+        user = users.query.filter_by(username=username_form).first()
+        if user:
+            if user.password == pwd:
+                return user.password
+            else:
+                return '<h1>Invalid username or password</h1>'
+    return render_template("login.html", form=form)
     return render_template("login.html", form=form)
 
 

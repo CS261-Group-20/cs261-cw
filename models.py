@@ -5,8 +5,9 @@ db = SQLAlchemy()
 
 class users(db.Model):
     __tablename__ = 'users'
+    __table_args__ = {'sqlite_autoincrement': True}
 
-    user_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     username = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(30), nullable=False)
 

@@ -1,18 +1,21 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
-from forms import LoginForm, RegistrationForm, SessionCreationForm
-from models import  db, users
-
+import datetime
+import string
+import random
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
+from models import db, users, eventTable, eventHosts
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
-db.init_app(app)
 app.config['SECRET_KEY'] = '68279'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
+bootstrap = Bootstrap(app)
 i = 1
 
-
+with app.app_context():
+    db.init_app(app)
 
 @app.route('/')
 def index():
@@ -33,6 +36,7 @@ def login():
         user = users.query.filter_by(username=username_form).first()
         if user:
             if user.password == pwd:
+                session["user_id"] = user.user_id
                 return user.password
             else:
                 return '<h1>Invalid username or password</h1>'
@@ -56,9 +60,44 @@ def register():
     return render_template("register.html", form=form)
 
 
+@app.route('/user', methods=['GET', 'POST'])
+def user():
+    if "user_id" in session:
+        user = users.query.filter_by(user_id=session["user_id"]).first()
+        return str(session["user_id"])
+    else:
+        return "not logged in"
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("home"))
+
 @app.route('/session_create', methods=['GET', 'POST'])
 def session_create():
+    global i
     form = SessionCreationForm()
+    if "user_id" in session: 
+        if request.method == 'POST':
+         session_name =  request.form['session_name']
+         session_type =  request.form['session_type']
+         session_start =  request.form['session_start']
+         fmt = "%d-%m-%Y"
+         dt_session_start = datetime.datetime.strptime(session_start, fmt)  
+         session_end =  request.form['session_end'] 
+         dt_session_end = datetime.datetime.strptime(session_end, fmt)
+         session_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+         new_session = eventTable(i,session_name,session_type,dt_session_start, dt_session_end, 0)
+         db.session.add(new_session)
+         # Add the user in session as the event host
+         user_host = eventHosts(session["user_id"],i)
+         db.session.add(user_host)
+         db.session.commit()
+         return "yay"
+         i += 1
+    else:
+        return "You are not logged in!"
+    return render_template("session_create.html", form=form)
     return render_template("session_create.html", form=form)
 
 

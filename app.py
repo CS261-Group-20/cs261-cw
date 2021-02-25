@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, flash, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import string
@@ -24,6 +24,7 @@ def index():
 
 @app.route('/home')
 def home():
+    flash("This is a flashed message.")
     return render_template("home.html")
 
 
@@ -37,9 +38,10 @@ def login():
         if user:
             if user.password == pwd:
                 session["user_id"] = user.user_id
-                return user.password
+                flash('Welcome %s' % username_form)
+                # return user.password
             else:
-                return '<h1>Invalid username or password</h1>'
+                flash('Invalid Login!')
     return render_template("login.html", form=form)
     return render_template("login.html", form=form)
 
@@ -118,6 +120,11 @@ def attendee():
     form = AttendeeForm()
     return render_template("attendee.html", form=form)
 
+# @app.route('/user', methods=['GET', 'POST'])
+# def user():
+#     results = []
+#     events = eventTable.query.filter_by(event_id = 1).all()
+#     return render_template("user.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

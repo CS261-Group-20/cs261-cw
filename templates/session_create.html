@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 {% include 'navbar.html' %}
+{% from "_formhelpers.html" import render_field %}
+
 {% block head %}
-<h1>This is the Session Creation page</h1> 
 {% endblock %}
 
 {% block body %}
-<!-- <p>Change this later, this is very basic html code</p> -->
-<div class="login-form">
-    <form method = "POST">
-        {{form.hidden_tag()}}
-        {{form.session_name.label}}
-        {{form.session_name}}<br>
-        {{form.session_type.label}}
-        {{form.session_type}}<br>
-        {{form.session_start.label}}
-        {{form.session_start}}<br>
-        {{form.session_end.label}}
-        {{form.session_end}}<br>
-        {{form.submit}}
-    </form>
-</div>
+
+<body>
+    <div class="container">
+        <div class="login-form">
+            <form method="POST">
+                {{form.hidden_tag()}}
+                {{ render_field(form.session_name, class='form-control', placeholder='Session Name') }}
+                {{ render_field(form.session_type, class='form-control', placeholder='Session Type') }}
+                {{ render_field(form.session_start, class='form-control', placeholder='Session Start') }}
+                {{ render_field(form.session_end, class='form-control', placeholder='Session End') }}
+                {{ render_field(form.submit, class='btn btn-success', placeholder='Password') }}
+            </form>
+        </div>
+    </div>
+</body>
 {% endblock %}

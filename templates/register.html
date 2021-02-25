@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 {% include 'navbar.html' %}
+{% from "_formhelpers.html" import render_field %}
+
 {% block head %}
-<h1>This is the Registration page</h1> 
 {% endblock %}
 
 {% block body %}
 <!--! <p>Change this later, this is very basic html code</p> -->
+<div class="container">
 <div class="login-form">
     <form method = "POST">
         {{form.hidden_tag()}}
-        {{form.username.label}}
-        {{form.username}}<br>
-        {{form.password.label}}
-        {{form.password}}<br>
-        {{form.confirm_password.label}}
-        {{form.confirm_password}}<br>
-        {{form.submit}}
+        {{ render_field(form.username, class='form-control', placeholder='Username') }}
+        {{ render_field(form.password, class='form-control', placeholder='Password') }}
+        {{ render_field(form.confirm_password, class='form-control', placeholder='Confirm Password') }}
+        {{ render_field(form.submit, class='btn btn-success')}}
     </form>
+</div>
 </div>
 {% endblock %}

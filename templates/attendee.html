@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% include 'navbar.html' %}
+{% from "_formhelpers.html" import render_field %}
+
 
 {% block head %}
 <h1>This is the Attendee page</h1> 
@@ -9,11 +12,9 @@
 <div class="login-form">
     <form method = "POST" action="attendee">
         {{form.hidden_tag()}}
-        {{form.feedback.label}}
-        {{form.feedback}}<br>
-        {{form.mood_type.label}}
-        {{form.mood_type}}<br>
-        {{form.submit}}
+        {{ render_field(form.feedback, class='form-control', placeholder='Feedback') }}
+        {{ render_field(form.mood_type, class='form-control', placeholder='Mood') }}
+        {{ render_field(form.submit, class='btn btn-success')}}
     </form>
 </div>
 {% endblock %}

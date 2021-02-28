@@ -48,12 +48,12 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    global i
+    i = users.query.order_by(users.user_id.desc()).first().user_id
     form = RegistrationForm()
     if request.method == 'POST':
         username = request.form['username']
         pwd = request.form['password']
-        new_user = users(i, username, pwd)
+        new_user = users(i+1, username, pwd)
         db.session.add(new_user)
         db.session.commit()
         i += 1
@@ -81,22 +81,22 @@ def session_create():
     form = SessionCreationForm()
     if "user_id" in session: 
         if request.method == 'POST':
-         session_name =  request.form['session_name']
-         session_type =  request.form['session_type']
-         session_start =  request.form['session_start']
-         fmt = "%d-%m-%Y"
-         dt_session_start = datetime.datetime.strptime(session_start, fmt)  
-         session_end =  request.form['session_end'] 
-         dt_session_end = datetime.datetime.strptime(session_end, fmt)
-         session_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-         new_session = eventTable(i,session_name,session_type,dt_session_start, dt_session_end, 0)
-         db.session.add(new_session)
-         # Add the user in session as the event host
-         user_host = eventHosts(session["user_id"],i)
-         db.session.add(user_host)
-         db.session.commit()
-         return "yay"
-         i += 1
+            session_name =  request.form['session_name']
+            session_type =  request.form['session_type']
+            session_start =  request.form['session_start']
+            fmt = "%d-%m-%Y"
+            dt_session_start = datetime.datetime.strptime(session_start, fmt)  
+            session_end =  request.form['session_end'] 
+            dt_session_end = datetime.datetime.strptime(session_end, fmt)
+            session_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+            new_session = eventTable(i,session_name,session_type,dt_session_start, dt_session_end, 0)
+            db.session.add(new_session)
+            # Add the user in session as the event host
+            user_host = eventHosts(session["user_id"],i)
+            db.session.add(user_host)
+            db.session.commit()
+            return "yay"
+            i += 1
     else:
         return "You are not logged in!"
     return render_template("session_create.html", form=form)

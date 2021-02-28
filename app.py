@@ -94,7 +94,7 @@ def session_create():
             session_end =  request.form['session_end'] 
             dt_session_end = datetime.datetime.strptime(session_end, fmt)
             session_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-            new_session = eventTable(i + 1,session_name,session_type,dt_session_start, dt_session_end, 0)
+            new_session = eventTable(i + 1,session_name,session_type,dt_session_start, dt_session_end, session_code, 0)
             db.session.add(new_session)
             # Add the user in session as the event host
             user_host = eventHosts(session["user_id"],i)

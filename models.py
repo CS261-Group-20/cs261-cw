@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from datetime import datetime
-db = SQLAlchemy()
+from app import app
+db = SQLAlchemy(app)
 
 class users(db.Model):
     __tablename__ = 'users'
@@ -28,16 +29,16 @@ class eventTable(db.Model):
     event_type = db.Column(db.String(30), nullable=False)
     event_start = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     event_end = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # event_code = db.Column(db.String(10), nullable=False)
+    event_code = db.Column(db.String(10), nullable=False)
     event_completed = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, event_id, event_desc, event_type, event_start, event_end, event_completed):
+    def __init__(self, event_id, event_desc, event_type, event_start, event_end, event_code, event_completed):
         self.event_id = event_id
         self.event_desc = event_desc
         self.event_type = event_type
         self.event_start = event_start
         self.event_end = event_end
-        # self.event_code = event_code
+        self.event_code = event_code
         self.event_completed = event_completed
 
     def __repr__(self):

@@ -47,7 +47,11 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    i = users.query.order_by(users.user_id.desc()).first().user_id
+    user = users.query.order_by(users.user_id.desc()).first()
+    if user:
+        i = user.user_id
+    else:
+        i = 0
     form = RegistrationForm()
     if request.method == 'POST':
         username = request.form['username']
@@ -74,7 +78,11 @@ def logout():
 
 @app.route('/session_create', methods=['GET', 'POST'])
 def session_create():
-    i = eventTable.query.order_by(eventTable.event_id.desc()).first().event_id
+    event = eventTable.query.order_by(eventTable.event_id.desc()).first()
+    if event:
+        i = event.event_id
+    else:
+        i = 0
     form = SessionCreationForm()
     if "user_id" in session: 
         if request.method == 'POST':

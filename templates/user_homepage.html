@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% include 'navbar.html' %}
+
+{% block head %}
+<h1>This is the User homepage</h1>
+{% endblock %}
+
+{% block body %}
+
+<div id="container p-3 my-3 border">
+    {% if events_host_user %}
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Event Type</th>
+                <th>Join Event</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for events in events_host_user %}
+            <tr>
+                <td>{{ events.event_desc }}</td>
+                <td>{{ events.event_type }}</td>
+                <td> Join Session</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div>No events!</div>
+    {% endif %}
+</div>
+{% endblock %}

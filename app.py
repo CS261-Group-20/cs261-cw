@@ -135,10 +135,10 @@ def attendee():
     form = AttendeeForm()
     return render_template("attendee.html", form=form)
 
-# @app.route('/user', methods=['GET', 'POST'])
-# def user():
-#     events = eventTable.query.filter_by(event_id = 1).all()
-#     return render_template("user.html")
+@app.route('/user_homepage', methods=['GET', 'POST'])
+def user_homepage():
+    events_host_user = eventTable.query.join(eventHosts, eventTable.event_id == eventHosts.event_id).filter(eventHosts.user_id == session['user_id']).all()
+    return render_template("user_homepage.html", events_host_user = events_host_user)
 
 if __name__ == "__main__":
     app.run(debug=True)

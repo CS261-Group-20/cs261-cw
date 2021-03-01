@@ -8,7 +8,7 @@
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
 <div class="login-form">
-    <form method = "GET" action="attendee">
+    <form method = "POST">
         {{form.hidden_tag()}}
         {{form.session_code.label}}
         {{form.session_code}}<br>

@@ -5,7 +5,7 @@ import string
 import random
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
-from models import db, users, eventTable, eventHosts
+from models import db, users, eventTable, eventHosts, eventAttendees
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
@@ -110,6 +110,17 @@ def session_create():
 @app.route('/session_join', methods=['GET', 'POST'])
 def session_join():
     form = SessionJoinForm()
+    if request.method == 'POST':
+        session_code = request.form['session_code']
+        event_joined = eventTable.query.filter_by(event_code = session_code).first()
+        if event_joined:
+            session["event_id"] = event_joined.event_id
+            new_attendee = eventAttendees(session["user_id"],session["event_id"])
+            db.session.add(new_attendee)
+            db.session.commit()
+            return "Yay"
+        else:
+            return "Session code incorrect"
     return render_template("session_join.html", form=form)
 
 
@@ -126,7 +137,6 @@ def attendee():
 
 # @app.route('/user', methods=['GET', 'POST'])
 # def user():
-#     results = []
 #     events = eventTable.query.filter_by(event_id = 1).all()
 #     return render_template("user.html")
 

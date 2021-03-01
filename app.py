@@ -5,7 +5,7 @@ import string
 import random
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
-from models import db, users, eventTable, eventHosts, eventAttendees
+from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
@@ -100,7 +100,8 @@ def session_create():
             user_host = eventHosts(session["user_id"],i)
             db.session.add(user_host)
             db.session.commit()
-            return "yay"
+            session["host_event_id"] = i
+            return redirect(url_for('host', id = session["host_event_id"]))
             i += 1
     else:
         return "You are not logged in!"
@@ -114,24 +115,39 @@ def session_join():
         session_code = request.form['session_code']
         event_joined = eventTable.query.filter_by(event_code = session_code).first()
         if event_joined:
-            session["event_id"] = event_joined.event_id
-            new_attendee = eventAttendees(session["user_id"],session["event_id"])
+            session["attendee_event_id"] = event_joined.event_id
+            new_attendee = eventAttendees(session["user_id"],session["attendee_event_id"])
             db.session.add(new_attendee)
             db.session.commit()
-            return "Yes"
+            return redirect(url_for('attendee', id = session["attendee_event_id"]))
         else:
             return "Session code incorrect"
     return render_template("session_join.html", form=form)
 
 
-@app.route('/host', methods=['GET', 'POST'])
-def host():
+@app.route('/host/<id>', methods=['GET', 'POST'])
+def host(id):
     form = HostForm()
+    # Get list of all users in this session
+    # TODO
+    #
+
+    # Display the feedback questions for the attendee
+    # TODO
+    #
+
+    # if request.method == 'POST':
+    #     question = request.form['add_feedback_question']
+    #     new_question = feedbackQuestions()
     return render_template("host.html", form=form)
 
 
-@app.route('/attendee', methods=['GET', 'POST'])
-def attendee():
+@app.route('/attendee/<id>', methods=['GET', 'POST'])
+def attendee(id):
+    # Get list of all users in this session
+    # TODO
+    #
+
     form = AttendeeForm()
     return render_template("attendee.html", form=form)
 
@@ -139,7 +155,8 @@ def attendee():
 def user_homepage():
     if "user_id" in session:
         events_host_user = eventTable.query.join(eventHosts, eventTable.event_id == eventHosts.event_id).filter(eventHosts.user_id == session['user_id']).all()
-        return render_template("user_homepage.html", events_host_user = events_host_user)
+        events_attendee_user = eventTable.query.join(eventAttendees, eventTable.event_id == eventAttendees.event_id).filter(eventAttendees.user_id == session['user_id']).all()
+        return render_template("user_homepage.html", events_host_user = events_host_user, events_attendee_user = events_attendee_user)
     else:
         return "not logged in!"
 

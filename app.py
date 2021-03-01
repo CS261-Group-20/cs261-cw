@@ -118,7 +118,7 @@ def session_join():
             new_attendee = eventAttendees(session["user_id"],session["event_id"])
             db.session.add(new_attendee)
             db.session.commit()
-            return "Yay"
+            return "Yes"
         else:
             return "Session code incorrect"
     return render_template("session_join.html", form=form)

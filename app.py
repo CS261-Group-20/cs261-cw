@@ -137,8 +137,11 @@ def attendee():
 
 @app.route('/user_homepage', methods=['GET', 'POST'])
 def user_homepage():
-    events_host_user = eventTable.query.join(eventHosts, eventTable.event_id == eventHosts.event_id).filter(eventHosts.user_id == session['user_id']).all()
-    return render_template("user_homepage.html", events_host_user = events_host_user)
+    if "user_id" in session:
+        events_host_user = eventTable.query.join(eventHosts, eventTable.event_id == eventHosts.event_id).filter(eventHosts.user_id == session['user_id']).all()
+        return render_template("user_homepage.html", events_host_user = events_host_user)
+    else:
+        return "not logged in!"
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -41,7 +41,7 @@ class eventTable(db.Model):
         self.event_completed = event_completed
 
     def __repr__(self):
-        return f"<Event {self.event_id}, {self.event_desc}, {self.event_type}, {self.event_start}, {self.self.event_end}, {self.self.event_completed}>"
+        return f"<Event {self.event_id}, {self.event_desc}, {self.event_type}, {self.event_start}, {self.event_end}, {self.event_code}, {self.event_completed}>"
 
 class eventAttendees(db.Model):
     __tablename__ = 'eventAttendees'
@@ -74,13 +74,15 @@ class feedbackQuestions(db.Model):
 
     feedback_question_id = db.Column(db.Integer, primary_key=True, nullable=False)
     feedback_question = db.Column(db.String(100), nullable=False)
+    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), nullable=False)
 
-    def __init__(self, user_id, username, password):
+    def __init__(self, feedback_question_id, feedback_question, event_id):
         self.feedback_question_id = feedback_question_id
         self.feedback_question = feedback_question
+        self.event_id = event_id
 
     def __repr__(self):
-        return f"<Feedback Question {self.feedback_question_id}, {self.feedback_question}>"        
+        return f"<Feedback Question {self.feedback_question_id}, {self.feedback_question}, {self.event_id}>"        
 
 class feedback(db.Model):
     __tablename__ = 'feedback'

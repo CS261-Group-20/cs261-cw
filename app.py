@@ -76,11 +76,17 @@ def logout():
 
 @app.route('/session_create', methods=['GET', 'POST'])
 def session_create():
+    # TODO : ADD DEFAULT QUESTION FOR EACH EVENT
     event = eventTable.query.order_by(eventTable.event_id.desc()).first()
     if event:
         i = event.event_id
     else:
         i = 0
+    feedbackq_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
+    if feedbackq_counter:
+        j = feedbackq_counter.feedback_question_id
+    else:
+        j = 0
     form = SessionCreationForm()
     if "user_id" in session: 
         if request.method == 'POST':
@@ -97,6 +103,10 @@ def session_create():
             # Add the user in session as the event host
             user_host = eventHosts(session["user_id"],i + 1)
             db.session.add(user_host)
+            db.session.commit()
+            # Add a default question to the event
+            default_question = feedbackQuestions(j,"General Feedback", i + 1)
+            db.session.add(default_question)
             db.session.commit()
             session["host_event_id"] = i + 1
             return redirect(url_for('host', id = session["host_event_id"]))
@@ -134,13 +144,14 @@ def host(id):
     #
 
     # Display the feedback questions for the attendee
+    questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
     # TODO
     #
 
     # if request.method == 'POST':
     #     question = request.form['add_feedback_question']
     #     new_question = feedbackQuestions()
-    return render_template("host.html", form=form)
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session )
 
 
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
@@ -164,7 +175,8 @@ def user_homepage():
         return render_template("user_homepage.html", events_host_user = events_host_user, events_attendee_user = events_attendee_user)
     else:
         # TODO: Redirect user to login 
-        return "not logged in!"
+        flash('Invalid Login!')
+        return redirect('/login')
 
 if __name__ == "__main__":
     app.run(debug=True)

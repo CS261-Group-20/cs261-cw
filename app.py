@@ -38,7 +38,7 @@ def login():
             if user.password == pwd:
                 session["user_id"] = user.user_id
                 flash('Welcome %s' % username_form)
-                # return user.password
+                return redirect('/user_homepage')
             else:
                 flash('Invalid Login!')
     return render_template("login.html", form=form)
@@ -58,7 +58,7 @@ def register():
         new_user = users(i+1, username, pwd)
         db.session.add(new_user)
         db.session.commit()
-        return "Yayyyy"
+        return redirect('/login')
     return render_template("register.html", form = form)
 
 
@@ -96,12 +96,11 @@ def session_create():
             new_session = eventTable(i + 1,session_name,session_type,dt_session_start, dt_session_end, session_code, 0)
             db.session.add(new_session)
             # Add the user in session as the event host
-            user_host = eventHosts(session["user_id"],i)
+            user_host = eventHosts(session["user_id"],i + 1)
             db.session.add(user_host)
             db.session.commit()
-            session["host_event_id"] = i
+            session["host_event_id"] = i + 1
             return redirect(url_for('host', id = session["host_event_id"]))
-            i += 1
     else:
         return "You are not logged in!"
     return render_template("session_create.html", form=form)
@@ -152,7 +151,7 @@ def attendee(id):
     # Get attendees
     users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(eventAttendees.event_id == id).all()
     # Get host information
-    user_host = users.query.join(eventHosts, users.user_id == eventHosts.user_id).filter_by(eventHosts.event_id == id).all()
+    user_host = users.query.join(eventHosts, users.user_id == eventHosts.user_id).filter(eventHosts.event_id == id).all()
     #
 
     form = AttendeeForm()

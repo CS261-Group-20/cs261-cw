@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from datetime import datetime
+from sqlalchemy.sql.schema import PrimaryKeyConstraint
 db = SQLAlchemy()
 
 class users(db.Model):
@@ -46,9 +47,10 @@ class eventTable(db.Model):
 class eventAttendees(db.Model):
     __tablename__ = 'eventAttendees'
 
-    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), primary_key=True, nullable=False)
-    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), primary_key=True, nullable=False)
-    
+    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), nullable=False)
+    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), nullable=False)
+    __table_args__ = (PrimaryKeyConstraint('user_id', 'event_id'),{},)
+
     def __init__(self, user_id, event_id):
         self.user_id = user_id
         self.event_id = event_id
@@ -59,8 +61,9 @@ class eventAttendees(db.Model):
 class eventHosts(db.Model):
     __tablename__ = 'eventHosts'
 
-    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), primary_key=True, nullable=False)
-    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), primary_key=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), nullable=False)
+    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), nullable=False)
+    __table_args__ = (PrimaryKeyConstraint('user_id', 'event_id'),{},)
     
     def __init__(self, user_id, event_id):
         self.user_id = user_id

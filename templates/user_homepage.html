@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% include 'navbar.html' %}
+
+{% block head %}
+<!-- <h1>This is the User homepage</h1> -->
+{% endblock %}
+
+{% block body %}
+
+<div id="container p-3 my-3 border">
+    {% if events_host_user %}
+    <h1 style="color:rgb(255, 255, 255)">Events Hosting</h1>
+    <table class="table table-bordered table-sm">
+        <thead style="color:rgb(255, 255, 255)">
+            <tr>
+                <th>Event Name</th>
+                <th>Event Type</th>
+                <th>Join Event</th>
+            </tr>
+        </thead>
+        <tbody style="color:rgb(255, 255, 255)">
+            {% for events_hosted in events_host_user %}
+            <tr>
+                <td>{{ events_hosted.event_desc }}</td>
+                <td>{{ events_hosted.event_type }}</td>
+                <td> <a href="{{ url_for('host', id=events_hosted.event_id) }}">Join Session</a> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div>No events!</div>
+    {% endif %}
+</div>
+
+<div id="container p-3 my-3 border">
+    <h1 style="color:rgb(255, 255, 255)">Events Attending</h1>
+    {% if events in events_attendee_user %}
+    <table class="table table-bordered table-sm">
+        <thead style="color:rgb(255, 255, 255)">
+            <tr>
+                <th>Event Name</th>
+                <th>Event Type</th>
+                <th>Join Event</th>
+            </tr>
+        </thead>
+        <tbody style="color:rgb(255, 255, 255)">
+            {% for events_attending in events_attendee_user %}
+            <tr>
+                <td>{{ events_attending.event_desc }}</td>
+                <td>{{ events_attending.event_type }}</td>
+                <td> <a href="{{ url_for('attendee', id=events_attending.event_id) }}">Join Session</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div>No events!</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -8,16 +8,23 @@
 {% block body %}
 
 <style>
-    
     .center {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 </style>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p style="color:rgb(255, 0, 255)">{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 <div class="container">
     <div class="center">

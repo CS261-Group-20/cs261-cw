@@ -130,6 +130,10 @@ def host(id):
     form = HostForm()
     # Get list of all users in this session
     # TODO
+    # Get attendees
+    users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(eventAttendees.event_id == id).all()
+    # Get host information
+    user_host = users.query.filter_by(user_id = session["user_id"]).first()
     #
 
     # Display the feedback questions for the attendee
@@ -146,6 +150,10 @@ def host(id):
 def attendee(id):
     # Get list of all users in this session
     # TODO
+    # Get attendees
+    users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(eventAttendees.event_id == id).all()
+    # Get host information
+    user_host = users.query.join(eventHosts, users.user_id == eventHosts.user_id).filter_by(eventHosts.event_id == id).all()
     #
 
     form = AttendeeForm()
@@ -158,6 +166,7 @@ def user_homepage():
         events_attendee_user = eventTable.query.join(eventAttendees, eventTable.event_id == eventAttendees.event_id).filter(eventAttendees.user_id == session['user_id']).all()
         return render_template("user_homepage.html", events_host_user = events_host_user, events_attendee_user = events_attendee_user)
     else:
+        # TODO: Redirect user to login page
         return "not logged in!"
 
 if __name__ == "__main__":

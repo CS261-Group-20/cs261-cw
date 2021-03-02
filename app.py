@@ -12,7 +12,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
 bootstrap = Bootstrap(app)
-i = 1
 
 with app.app_context():
     db.init_app(app)

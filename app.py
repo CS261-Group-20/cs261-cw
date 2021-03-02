@@ -165,7 +165,7 @@ def user_homepage():
         events_attendee_user = eventTable.query.join(eventAttendees, eventTable.event_id == eventAttendees.event_id).filter(eventAttendees.user_id == session['user_id']).all()
         return render_template("user_homepage.html", events_host_user = events_host_user, events_attendee_user = events_attendee_user)
     else:
-        # TODO: Redirect user to login page
+        # TODO: Redirect user to login 
         return "not logged in!"
 
 if __name__ == "__main__":

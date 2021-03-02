@@ -39,8 +39,7 @@ def login():
                 session["user_id"] = user.user_id
                 flash('Welcome %s' % username_form)
                 return redirect('/user_homepage')
-            else:
-                flash('Invalid Login!')
+        flash('Invalid Login!')
     return render_template("login.html", form=form)
 
 

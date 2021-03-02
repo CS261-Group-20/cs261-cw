@@ -8,6 +8,8 @@
 
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
+
+
 <body>
     <div class="container">
 <div class="login-form">
@@ -21,5 +23,12 @@
     </form>
 </div>
 </div>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p style="color:rgb(255, 0, 255)">{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 </body>
 {% endblock %}

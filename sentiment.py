@@ -1,29 +1,40 @@
 from textblob import TextBlob
-import csv 
+import csv
+from models import db, users, feedbackQuestions, feedback
 
-#take from the db
-feedback = []
-#also take from the db
-time = []
+#this file may actually not be needed but keeps things cleaner for now
 
-
-
+#thing akram made, guess it just makes the output nicer
 def getValues(string):
     strin = TextBlob(string)
     string.correct()
     string.lower()
     return strin
 
-feedBackList = []
+#process all the feedback for a given event, this will be dictated by which event is being accessed though the website??? either way here is just a parameter
+def processFeedbackData(eventID)
 
-#grabs the values for each and shoves into a nice list
-for fb in feedback:
-    tempList = []
-    f = getValues(fb)
-    tempList.append(fb)
-    tempList.append(f.sentiment.polarity)
-    tempList.append(1 - f.sentiment.subjectivity)
-    feedBackList.append(tempList)
+    #query db for the feedback relating to the given eventID
+    #get feedback and feedbackDateTime where event_id == eventID
+    #take this and then add the polarity and subjectivity
+    #further define a generic metric which is the two combined
+    #learn about chart.js in order to make nice graphs
+
+
+    feedback = []
+
+
+    feedBackList = []
+
+    #from a previos train of thought, but still somewhat relevant
+    #grabs the values for each and shoves into a nice list
+    for fb in feedback:
+        tempList = []
+        f = getValues(fb)
+        tempList.append(fb)
+        tempList.append(f.sentiment.polarity)
+        tempList.append(1 - f.sentiment.subjectivity)
+        feedBackList.append(tempList)
 
 
 

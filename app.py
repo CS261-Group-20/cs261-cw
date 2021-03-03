@@ -134,6 +134,12 @@ def session_join():
 
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
+    feedbackq_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
+    if feedbackq_counter:
+        j = feedbackq_counter.feedback_question_id
+    else:
+        j = 0
+
     form = HostForm()
     # Get list of all users in this session
     # TODO
@@ -142,15 +148,19 @@ def host(id):
     # Get host information
     user_host = users.query.filter_by(user_id = session["user_id"]).first()
     #
-
     # Display the feedback questions for the attendee
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
     # TODO
     #
 
-    # if request.method == 'POST':
-    #     question = request.form['add_feedback_question']
-    #     new_question = feedbackQuestions()
+    if request.method == 'POST':
+        question = request.form['add_feedback_question']
+        new_question = feedbackQuestions(j + 1, question ,id)
+        db.session.add(new_question)
+        db.session.commit()
+        return redirect(url_for('host', id = id))
+        
+
     return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session )
 
 
@@ -161,11 +171,17 @@ def attendee(id):
     # Get attendees
     users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(eventAttendees.event_id == id).all()
     # Get host information
-    user_host = users.query.join(eventHosts, users.user_id == eventHosts.user_id).filter(eventHosts.event_id == id).all()
+    user_host = users.query.join(eventHosts, users.user_id == eventHosts.user_id).filter(eventHosts.event_id == id).first()
     #
 
+    # Get questions for the event
+    questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
+    forms = []
+    for questions in questions_in_session:
+        form = AttendeeForm()
+
     form = AttendeeForm()
-    return render_template("attendee.html", form=form)
+    return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session)
 
 @app.route('/user_homepage', methods=['GET', 'POST'])
 def user_homepage():

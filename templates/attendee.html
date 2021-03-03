@@ -10,11 +10,31 @@
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
 <div class="login-form">
-    <form method = "POST" action="attendee">
-        {{form.hidden_tag()}}
-        {{ render_field(form.feedback, class='form-control', placeholder='Feedback') }}
-        {{ render_field(form.mood_type, class='form-control', placeholder='Mood') }}
-        {{ render_field(form.submit, class='btn btn-success')}}
-    </form>
+    <h2 style="color:rgb(255, 255, 255)">Feedback Questions</h2>
+    <div class ="current_questions">
+        {% if questions_in_session %}
+        {% for questions in questions_in_session %}
+        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
+        <form method = "POST" action="attendee">
+            {{form.hidden_tag()}}
+            {{ render_field(form.feedback, class='form-control', placeholder='Feedback') }}
+            {{ render_field(form.mood_type, class='form-control', placeholder='Mood') }}
+            {{ render_field(form.submit, class='btn btn-success')}}
+        </form>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="users">
+    <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+    {% if user_host %}
+    <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+    {% endif %}
+    {% if users_in_session %}
+    {% for users in users_in_session %}
+    <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+    {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}

@@ -4,25 +4,26 @@
 
 
 {% block head %}
-<h1>This is the Attendee page</h1> 
+<h1>This is the Attendee page</h1>
 {% endblock %}
 
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
 <div class="login-form">
     <h2 style="color:rgb(255, 255, 255)">Feedback Questions</h2>
-    <div class ="current_questions">
-        {% if questions_in_session %}
-        {% for questions in questions_in_session %}
-        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
-        <form method = "POST" action="attendee">
+    <div class="current_questions">
+        <form method="POST">
             {{form.hidden_tag()}}
-            {{ render_field(form.feedback, class='form-control', placeholder='Feedback') }}
-            {{ render_field(form.mood_type, class='form-control', placeholder='Mood') }}
+
+            {% for questions in form.feedback_questions %}
+            {{ questions.hidden_tag() }}
+            {# Flask-WTF needs `hidden_tag()` so CSRF works for each form #}
+            {{ render_field(questions.question, class='form-control') }}
+            {% endfor %}
+
+            {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
             {{ render_field(form.submit, class='btn btn-success')}}
         </form>
-        {% endfor %}
-        {% endif %}
     </div>
 </div>
 

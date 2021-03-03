@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, RadioField, DateField, Field
+from wtforms import StringField, PasswordField, SubmitField, RadioField, DateField, FieldList, FormField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 class RegistrationForm(FlaskForm):
@@ -25,11 +25,11 @@ class SessionJoinForm(FlaskForm):
     session_code = StringField('Session Code',validators=[DataRequired()]) 
     submit = SubmitField('Join Session')
 
-# class SessionQuestion(FlaskForm):
-#     question = StringField('Question',validators=[DataRequired()])
+class SessionQuestion(FlaskForm):
+    question = StringField(validators=[DataRequired()])
 
 class AttendeeForm(FlaskForm):
-    feedback = StringField('feedback', validators=[DataRequired()])
+    feedback_questions = FieldList(FormField(SessionQuestion))
     mood_type = RadioField('Mood', choices=[(1, ':D'),(2, ':I'),(3, ':(')],validators=[DataRequired()] )
     submit = SubmitField('Submit Feedback')
 

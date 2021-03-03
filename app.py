@@ -1,12 +1,14 @@
 from flask import Flask, flash, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from datetime import date
 import string
 import random
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
-from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions
+from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
 from flask_bootstrap import Bootstrap
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
@@ -166,6 +168,12 @@ def host(id):
 
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
 def attendee(id):
+    feedback_counter = feedback.query.order_by(feedback.feedback_id.desc()).first()
+    if feedback_counter:
+        j = feedback_counter.feedback_id + 1
+    else:
+        j = 1
+
     # Get list of all users in this session
     # TODO
     # Get attendees
@@ -176,11 +184,24 @@ def attendee(id):
 
     # Get questions for the event
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
-    forms = []
+    form_questions = []
     for questions in questions_in_session:
-        form = AttendeeForm()
+        form_questions.append({"question": questions.feedback_question})
+    
+    form = AttendeeForm(feedback_questions = form_questions)
+    if request.method == 'POST':
+       mood = request.form["mood_type"]
+       for field in request.form["feedback_questions"]:
+           i = 1
+           message = field.question.data
+           fmt = "%d-%m-%Y"
+           feedback_time = datetime.datetime.strptime(date.today(), fmt)
+           new_feedback = feedback(j, i, id, session["user_id"], message, 1 , 1)
+           db.session.add(new_feedback)
+           db.session.commit()
+           return redirect(url_for('attendee', id = id))
 
-    form = AttendeeForm()
+
     return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session)
 
 @app.route('/user_homepage', methods=['GET', 'POST'])

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, RadioField, DateField, FieldList, FormField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.fields.simple import HiddenField
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=30)])
@@ -26,6 +27,8 @@ class SessionJoinForm(FlaskForm):
     submit = SubmitField('Join Session')
 
 class SessionQuestion(FlaskForm):
+    question_id = HiddenField()
+    # TODO: GET QUESTION NAME 
     question = StringField(validators=[DataRequired()])
 
 class AttendeeForm(FlaskForm):

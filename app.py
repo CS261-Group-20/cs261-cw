@@ -188,12 +188,18 @@ def attendee(id):
     # Get questions for the event
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
     form_questions = []
+    counter = 0
     for questions in questions_in_session:
-        form_questions.append({"question_id":questions.feedback_question_id,
-        "question_name": questions.feedback_question,
-        "question": questions.feedback_question})
+        form_questions.append({"question_id": counter ,
+        "question": counter})
+        counter+=1
     
     form = AttendeeForm(feedback_questions = form_questions)
+    counter = 0
+    for questions in form.feedback_questions:
+        questions.question.label.text = questions_in_session[counter].feedback_question
+        counter+= 1
+
     if request.method == 'POST':
         #TODO: GET THIS TO WORK
        mood = request.form["mood_type"]
@@ -208,7 +214,7 @@ def attendee(id):
            return redirect(url_for('attendee', id = id))
 
 
-    return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session)
+    return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, counter = counter)
 
 @app.route('/user_homepage', methods=['GET', 'POST'])
 def user_homepage():

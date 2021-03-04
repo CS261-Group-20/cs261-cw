@@ -100,5 +100,3 @@ def processFeedbackData(eventID):
 
 
         #so converted all timestamps to the nearest 10 minutes
-
-            

@@ -137,9 +137,9 @@ def session_join():
 
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
-    feedbackq_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
-    if feedbackq_counter:
-        j = feedbackq_counter.feedback_question_id
+    feedback_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
+    if feedback_counter:
+        j = feedback_counter.feedback_question_id
     else:
         j = 0
 
@@ -203,15 +203,16 @@ def attendee(id):
     if request.method == 'POST':
         #TODO: GET THIS TO WORK
         mood = request.form["mood_type"]
-        for field in request.form["feedback_questions"]:
-            i = 1
+        i = 1
+        for field in form["feedback_questions"]:
             message = field.question.data
-            fmt = "%d-%m-%Y"
-            feedback_time = datetime.datetime.strptime(date.today(), fmt)
-            new_feedback = feedback(j, i, id, session["user_id"], message, 1 , 1)
+            fmt = "%d-%m-%Y, %H:%M:%S"
+            feedback_time = datetime.datetime.strptime(date.today().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
+            new_feedback = feedback(j, i, id, session["user_id"], message, feedback_time, 1 , 1,)
             db.session.add(new_feedback)
             db.session.commit()
-            return redirect(url_for('attendee', id = id))
+            i += 3
+        return redirect(url_for('attendee', id = id))
 
 
     return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, counter = counter)

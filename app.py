@@ -4,6 +4,7 @@ import datetime
 from datetime import date
 import string
 import random
+from collections import namedtuple
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
@@ -107,7 +108,7 @@ def session_create():
             db.session.add(user_host)
             db.session.commit()
             # Add a default question to the event
-            default_question = feedbackQuestions(j,"General Feedback", i + 1)
+            default_question = feedbackQuestions(j + 1,"General Feedback", i + 1)
             db.session.add(default_question)
             db.session.commit()
             session["host_event_id"] = i + 1
@@ -142,6 +143,8 @@ def host(id):
     else:
         j = 0
 
+    event = eventTable.query.filter_by(event_id = id).first()
+
     form = HostForm()
     # Get list of all users in this session
     # TODO
@@ -163,7 +166,7 @@ def host(id):
         return redirect(url_for('host', id = id))
         
 
-    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session )
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event )
 
 
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
@@ -186,10 +189,13 @@ def attendee(id):
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
     form_questions = []
     for questions in questions_in_session:
-        form_questions.append({"question": questions.feedback_question})
+        form_questions.append({"question_id":questions.feedback_question_id,
+        "question_name": questions.feedback_question,
+        "question": questions.feedback_question})
     
     form = AttendeeForm(feedback_questions = form_questions)
     if request.method == 'POST':
+        #TODO: GET THIS TO WORK
        mood = request.form["mood_type"]
        for field in request.form["feedback_questions"]:
            i = 1

@@ -107,7 +107,7 @@ def session_create():
             db.session.add(user_host)
             db.session.commit()
             # Add a default question to the event
-            default_question = feedbackQuestions(j,"General Feedback", i + 1)
+            default_question = feedbackQuestions(j + 1,"General Feedback", i + 1)
             db.session.add(default_question)
             db.session.commit()
             session["host_event_id"] = i + 1
@@ -190,16 +190,16 @@ def attendee(id):
     
     form = AttendeeForm(feedback_questions = form_questions)
     if request.method == 'POST':
-       mood = request.form["mood_type"]
-       for field in request.form["feedback_questions"]:
-           i = 1
-           message = field.question.data
-           fmt = "%d-%m-%Y"
-           feedback_time = datetime.datetime.strptime(date.today(), fmt)
-           new_feedback = feedback(j, i, id, session["user_id"], message, 1 , 1)
-           db.session.add(new_feedback)
-           db.session.commit()
-           return redirect(url_for('attendee', id = id))
+        mood = request.form["mood_type"]
+        for field in request.form["feedback_questions"]:
+            i = 1
+            message = field.question.data
+            fmt = "%d-%m-%Y"
+            feedback_time = datetime.datetime.strptime(date.today(), fmt)
+            new_feedback = feedback(j, i, id, session["user_id"], message, 1 , 1)
+            db.session.add(new_feedback)
+            db.session.commit()
+            return redirect(url_for('attendee', id = id))
 
 
     return render_template("attendee.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session)

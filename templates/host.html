@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% include 'navbar.html' %}
+{% from "_formhelpers.html" import render_field %}
 {% block head %}
 <h1>This is the Host page</h1> 
 {% endblock %}
@@ -16,10 +17,8 @@
         {% endif %}
     </div>
     <form method = "POST">
-        {{form.hidden_tag()}}
-        {{form.add_feedback_question.label}}
-        {{form.add_feedback_question}}<br>
-        {{form.submit}}
+        {{ render_field(form.add_feedback_question, class='form-control') }}
+        {{ render_field(form.submit, class='form-control') }}
     </form>
 </div>
 

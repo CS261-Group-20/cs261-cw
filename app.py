@@ -198,20 +198,20 @@ def attendee(id):
     counter = 0
     for questions in form.feedback_questions:
         questions.question.label.text = questions_in_session[counter].feedback_question
+        questions.question_id = questions_in_session[counter].feedback_question_id
         counter+= 1
 
     if request.method == 'POST':
         #TODO: GET THIS TO WORK
         mood = request.form["mood_type"]
-        i = 1
         for field in form["feedback_questions"]:
             message = field.question.data
             fmt = "%d-%m-%Y, %H:%M:%S"
             feedback_time = datetime.datetime.strptime(date.today().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
-            new_feedback = feedback(j, i, id, session["user_id"], message, feedback_time, 1 , 1,)
+            new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,)
             db.session.add(new_feedback)
             db.session.commit()
-            i += 3
+            j += 1
         return redirect(url_for('attendee', id = id))
 
 

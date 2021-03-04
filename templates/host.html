@@ -34,4 +34,28 @@
     {% endfor %}
     {% endif %}
 </div>
+
+<div class= "feedback">
+    <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
+    {% if feedback_in_session %}
+    <table class="table table-bordered table-sm">
+        <thead style="color:rgb(255, 255, 255)">
+            <tr>
+                <th>User ID</th>
+                <th>Feedback</th>
+                <th>Feedback Date</th>
+            </tr>
+        </thead>
+        <tbody style="color:rgb(255, 255, 255)">
+            {% for feedback in feedback_in_session %}
+            <tr>
+                <td>{{ feedback.user_id }}</td>
+                <td>{{ feedback.message }}</td>
+                <td> {{feedback.feedback_date}} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
 {% endblock %}

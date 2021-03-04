@@ -158,6 +158,9 @@ def host(id):
     # TODO
     #
 
+    # Display all feedback for current session:
+    feedback_in_session = feedback.query.filter_by(event_id = id).all()
+
     if request.method == 'POST':
         question = request.form['add_feedback_question']
         new_question = feedbackQuestions(j + 1, question ,id)
@@ -166,7 +169,7 @@ def host(id):
         return redirect(url_for('host', id = id))
         
 
-    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event )
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session )
 
 
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
@@ -207,7 +210,7 @@ def attendee(id):
         for field in form["feedback_questions"]:
             message = field.question.data
             fmt = "%d-%m-%Y, %H:%M:%S"
-            feedback_time = datetime.datetime.strptime(date.today().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
+            feedback_time = datetime.datetime.strptime(datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
             new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,)
             db.session.add(new_feedback)
             db.session.commit()

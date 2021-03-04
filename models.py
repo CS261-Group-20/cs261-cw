@@ -92,8 +92,8 @@ class feedback(db.Model):
 
     feedback_id = db.Column(db.Integer, primary_key=True, nullable=False)
     feedback_question_id = db.Column(db.Integer, db.ForeignKey('feedbackQuestions.feedback_question_id'), nullable=False)
-    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), primary_key=True, nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), primary_key=True, nullable=False)
+    event_id = db.Column(db.Integer, ForeignKey('eventTable.event_id'), nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), nullable=False)
     message = db.Column(db.String(300), nullable=False)
     feedback_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     mood = db.Column(db.Float, nullable=False)

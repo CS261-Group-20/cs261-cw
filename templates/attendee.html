@@ -5,37 +5,60 @@
 
 {% block head %}
 <h1>This is the Attendee page</h1>
+<style>
+    .center {
+        margin: auto;
+  width: 50%;
+  padding: 10px;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
-<div class="login-form">
-    <h2 style="color:rgb(255, 255, 255)">Feedback Questions</h2>
-    <div class="current_questions">
-        <form method="POST">
-            {{form.hidden_tag()}}
+<div class="container-fluid">
+    <div class="row ml-2 mr-2">
+        <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E;">
+            <div class="card text-white bg-dark mb-3">
+                <div class="question-form">
+                    <h2 style="color:rgb(255, 255, 255)">Feedback Questions</h2>
+                    <div class="current_questions">
+                        <form method="POST">
+                            {{form.hidden_tag()}}
 
-            {% for questions in form.feedback_questions %}
-            {{ questions.hidden_tag() }}
-            {# Flask-WTF needs `hidden_tag()` so CSRF works for each form #}
-            {{ render_field(questions.question, class='form-control') }}
-            {% endfor %}
-            <h1>{{counter}}</h1>
-            {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
-            {{ render_field(form.submit, class='btn btn-success')}}
-        </form>
+                            {% for questions in form.feedback_questions %}
+                            {{ questions.hidden_tag() }}
+                            {# Flask-WTF needs `hidden_tag()` so CSRF works for each form #}
+                            {{ render_field(questions.question, class='form-control') }}
+                            {% endfor %}
+                            {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
+                            <div class= "center">
+                                {{ render_field(form.submit, class='btn btn-success ')}}   
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E; ">
+            <div class="card text-white bg-dark mb-3">
+                <div class="users">
+                    <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+                    {% if user_host %}
+                    <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+                    {% endif %}
+                    {% if users_in_session %}
+                    {% for users in users_in_session %}
+                    <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="users">
-    <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
-    {% if user_host %}
-    <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
-    {% endif %}
-    {% if users_in_session %}
-    {% for users in users_in_session %}
-    <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
-    {% endfor %}
-    {% endif %}
 </div>
 {% endblock %}

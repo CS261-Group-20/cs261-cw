@@ -3,13 +3,14 @@
 {% from "_formhelpers.html" import render_field %}
 
 {% block head %}
+
 {% endblock %}
 
 {% block body %}
 
 <body>
     <div class="container">
-        <div class="login-form">
+        <div class="center">
             <form method="POST">
                 {{form.hidden_tag()}}
                 {{ render_field(form.session_name, class='form-control', placeholder='Session Name') }}

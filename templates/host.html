@@ -7,21 +7,26 @@
 
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
-<div class="login-form">
-    <h2 style="color:rgb(255, 255, 255)">Current Questions</h2>
-    <div class ="current_questions">
-        {% if questions_in_session %}
-        {% for questions in questions_in_session %}
-        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
-        {% endfor %}
-        {% endif %}
-    </div>
-    <form method = "POST">
-        {{ render_field(form.add_feedback_question, class='form-control') }}
-        {{ render_field(form.submit, class='form-control') }}
-    </form>
+<div class="container-fluid">
+<div class="row"> 
+<div class="col-sm-6">
+    <div class="questions-form">
+        <h2 style="color:rgb(255, 255, 255)">Current Questions</h2>
+        <div class ="current_questions">
+            {% if questions_in_session %}
+            {% for questions in questions_in_session %}
+            <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <form method = "POST">
+            {{ render_field(form.add_feedback_question, class='form-control') }}
+            {{ render_field(form.submit, class='form-control') }}
+        </form>
+    </div>   
 </div>
 
+<div class="col-sm-6">
 
 <div class="users">
     <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
@@ -62,4 +67,8 @@
     <h1>Session Code</h1>
     <h2 style="color:rgb(255, 255, 255)" >{{event.event_code}}</h2>
 </div>
+</div>
+</div>
+
+
 {% endblock %}

@@ -5,7 +5,6 @@
 
 {% block head %}
 <!-- Header block -->
-<h1>This is the Attendee page</h1>
 <style>
     .center {
         margin: auto;
@@ -22,8 +21,8 @@
 {% block body %}
 <div class="container-fluid">
     <div class="row ml-2 mr-2">
-        <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E;">
-            <div class="card text-white bg-dark mb-3">
+        <div class="col-sm-6 rounded-lg pt-3 p-3">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
                 <div class="question-form">
                     <h2 style="color:rgb(255, 255, 255)">Feedback Questions</h2>
                     <div class="current_questions">
@@ -39,16 +38,14 @@
 
                             <!-- Render mood_type field from form and submit button-->
                             {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
-                            <div class= "center">
-                                {{ render_field(form.submit, class='btn btn-success ')}}   
-                            </div>
+                                {{ render_field(form.submit, class='btn btn-success bold')}}   
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E; ">
-            <div class="card text-white bg-dark mb-3">
+        <div class="col-sm-6 rounded-lg pt-3 p-3"">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
                 <div class="users">
                     <!-- Display all users present in session -->
                     <h2 style="color:rgb(255, 255, 255)">Users in session</h2>

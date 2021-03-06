@@ -2,76 +2,88 @@
 {% include 'navbar.html' %}
 {% from "_formhelpers.html" import render_field %}
 {% block head %}
-<h1>This is the Host page</h1> 
+<!-- <h1>This is the Host page</h1> -->
+<style>
+    .scrollable {
+        overflow-y: auto;
+        max-height: 300px;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid">
-<div class="row"> 
-<div class="col-sm-6">
-    <div class="questions-form">
-        <!-- Display all questions currently in form -->
-        <h2 style="color:rgb(255, 255, 255)">Current Questions</h2>
-        <div class ="current_questions">
-            {% if questions_in_session %}
-            {% for questions in questions_in_session %}
-            <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
-            {% endfor %}
-            {% endif %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="questions-form">
+                    <!-- Display all questions currently in form -->
+                    <!-- <h5 class="card-title">Card title</h5> -->
+                    <h2 class="card-title"">Current Questions</h2>
+                    <div class=" current_questions">
+                        {% if questions_in_session %}
+                        {% for questions in questions_in_session %}
+                        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
+                        {% endfor %}
+                        {% endif %}
+                </div>
+
+                <!-- Render add_feedback_question field and submit button-->
+                <form method="POST">
+                    {{ render_field(form.add_feedback_question, class='form-control') }}
+                    {{ render_field(form.submit, class='btn btn-success') }}
+                </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Render add_feedback_question field and submit button-->
-        <form method = "POST">
-            {{ render_field(form.add_feedback_question, class='form-control') }}
-            {{ render_field(form.submit, class='form-control') }}
-        </form>
-    </div>   
-</div>
+    <div class="col-sm-6">
+        <div class="card text-white bg-dark mb-3 my-3 mx-3">
+            <div class="scrollable">
+                <div class="users">
+                    <!-- Display all users present in session -->
+                    <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+                    {% if user_host %}
+                    <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+                    {% endif %}
+                    {% if users_in_session %}
+                    {% for users in users_in_session %}
+                    <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
 
-<div class="col-sm-6">
-
-<div class="users">
-    <!-- Display all users present in session -->
-    <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
-    {% if user_host %}
-    <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
-    {% endif %}
-    {% if users_in_session %}
-    {% for users in users_in_session %}
-    <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
-    {% endfor %}
-    {% endif %}
-</div>
-
-<div class= "feedback">
-    <!-- Display all feedback received -->
-    <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
-    {% if feedback_in_session %}
-    <table class="table table-bordered table-sm">
-        <thead style="color:rgb(255, 255, 255)">
-            <tr>
-                <th>User ID</th>
-                <th>Feedback</th>
-                <th>Feedback Date</th>
-            </tr>
-        </thead>
-        <tbody style="color:rgb(255, 255, 255)">
-            {% for feedback in feedback_in_session %}
-            <tr>
-                <td>{{ feedback.user_id }}</td>
-                <td>{{ feedback.message }}</td>
-                <td> {{feedback.feedback_date}} </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-</div>
-<div class ="session code"> 
-    <h1>Session Code</h1>
-    <h2 style="color:rgb(255, 255, 255)" >{{event.event_code}}</h2>
-</div>
-</div>
+            <div class="feedback">
+                <!-- Display all feedback received -->
+                <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
+                {% if feedback_in_session %}
+                <table class="table table-bordered table-sm">
+                    <thead style="color:rgb(255, 255, 255)">
+                        <tr>
+                            <th>User ID</th>
+                            <th>Feedback</th>
+                            <th>Feedback Date</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color:rgb(255, 255, 255)">
+                        {% for feedback in feedback_in_session %}
+                        <tr>
+                            <td>{{ feedback.user_id }}</td>
+                            <td>{{ feedback.message }}</td>
+                            <td> {{feedback.feedback_date}} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+            <div class="session code">
+                <h1>Session Code</h1>
+                <h2 style="color:rgb(255, 255, 255)">{{event.event_code}}</h2>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block body %}
-<!-- <p>Change this later, this is very basic html code</p> -->
 <div class="container-fluid">
 <div class="row"> 
 <div class="col-sm-6">
     <div class="questions-form">
+        <!-- Display all questions currently in form -->
         <h2 style="color:rgb(255, 255, 255)">Current Questions</h2>
         <div class ="current_questions">
             {% if questions_in_session %}
@@ -19,6 +19,8 @@
             {% endfor %}
             {% endif %}
         </div>
+
+        <!-- Render add_feedback_question field and submit button-->
         <form method = "POST">
             {{ render_field(form.add_feedback_question, class='form-control') }}
             {{ render_field(form.submit, class='form-control') }}
@@ -29,6 +31,7 @@
 <div class="col-sm-6">
 
 <div class="users">
+    <!-- Display all users present in session -->
     <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
     {% if user_host %}
     <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
@@ -41,6 +44,7 @@
 </div>
 
 <div class= "feedback">
+    <!-- Display all feedback received -->
     <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
     {% if feedback_in_session %}
     <table class="table table-bordered table-sm">
@@ -69,6 +73,5 @@
 </div>
 </div>
 </div>
-
 
 {% endblock %}

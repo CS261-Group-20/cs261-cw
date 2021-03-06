@@ -2,7 +2,6 @@
 {% include 'navbar.html' %}
 
 {% block head %}
-<!-- <h1>This is the User homepage</h1> -->
 <style>
     .center {
         margin: 0;
@@ -20,6 +19,8 @@
 {% endblock %}
 
 {% block body %}
+
+<!-- Display all flashed messages -->
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 {% for msg in messages %}
@@ -27,11 +28,12 @@
 {% endfor %}
 {% endif %}
 {% endwith %}
+
 <div class="container-fluid center">
     <div class="card text-white bg-dark mb-3">
         <h1 style="color:rgb(255, 255, 255)">Events Hosting</h1>
+        <!-- Display all events user is hosting-->
         {% if events_host_user %}
-
         <table class="table">
             <thead class="thead-dark" style="color:rgb(255, 255, 255)">
                 <tr>
@@ -51,11 +53,12 @@
             </tbody>
         </table>
         {% else %}
-        <div style="color:rgb(255, 255, 255)">No events!</div>
+        <div style="color:rgb(255, 255, 255)">No events currently being hosted!</div>
         {% endif %}
     </div>
     <div class="card text-white bg-dark mb-3">
         <h1 style="color:rgb(255, 255, 255)">Events Attending</h1>
+        <!-- Display all events user is attending-->
         {% if events_attendee_user %}
         <table class="table">
             <thead class="thead-dark" style="color:rgb(255, 255, 255)">
@@ -76,10 +79,9 @@
             </tbody>
         </table>
         {% else %}
-        <div>No events!</div>
+        <div>No events currently being attended!</div>
         {% endif %}
     </div>
 </div>
-
 
 {% endblock %}

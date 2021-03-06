@@ -4,6 +4,8 @@ from datetime import datetime
 from sqlalchemy.sql.schema import PrimaryKeyConstraint
 db = SQLAlchemy()
 
+# Python file providing the model for our database schema
+
 class users(db.Model):
     __tablename__ = 'users'
     __table_args__ = {'sqlite_autoincrement': True}

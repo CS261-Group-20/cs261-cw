@@ -4,12 +4,13 @@
 
 
 {% block head %}
+<!-- Header block -->
 <h1>This is the Attendee page</h1>
 <style>
     .center {
         margin: auto;
-  width: 50%;
-  padding: 10px;
+        width: 50%;
+        padding: 10px;
     }
 
     .bold {
@@ -19,7 +20,6 @@
 {% endblock %}
 
 {% block body %}
-<!-- <p>Change this later, this is very basic html code</p> -->
 <div class="container-fluid">
     <div class="row ml-2 mr-2">
         <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E;">
@@ -30,11 +30,14 @@
                         <form method="POST">
                             {{form.hidden_tag()}}
 
+                            <!-- Render all questions present in form alongside their respective textfields -->
                             {% for questions in form.feedback_questions %}
                             {{ questions.hidden_tag() }}
                             {# Flask-WTF needs `hidden_tag()` so CSRF works for each form #}
                             {{ render_field(questions.question, class='form-control') }}
                             {% endfor %}
+
+                            <!-- Render mood_type field from form and submit button-->
                             {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
                             <div class= "center">
                                 {{ render_field(form.submit, class='btn btn-success ')}}   
@@ -47,6 +50,7 @@
         <div class="col-sm-6 rounded-lg pt-3 p-3" style="background-color:#212B4E; ">
             <div class="card text-white bg-dark mb-3">
                 <div class="users">
+                    <!-- Display all users present in session -->
                     <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
                     {% if user_host %}
                     <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>

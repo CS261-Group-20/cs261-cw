@@ -15,6 +15,7 @@
 <div class="login-form">
     <form method = "POST" action="/login">
         <div class="form-group">
+            <!-- Render username and password fields and submit button-->
             {{form.hidden_tag()}}
             {{ render_field(form.username, class='form-control', placeholder='Username') }}
             {{ render_field(form.password, class='form-control', placeholder='Password') }}
@@ -23,6 +24,8 @@
     </form>
 </div>
 </div>
+
+<!-- Display all flashed messages -->
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for msg in messages %}

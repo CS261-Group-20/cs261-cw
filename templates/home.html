@@ -16,10 +16,9 @@
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
-
-
 </style>
 
+<!-- Display flashed messages -->
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for msg in messages %}
@@ -28,6 +27,7 @@
     {% endif %}
 {% endwith %}
 
+<!-- Display buttons which allow users to access other endpoints -->
 <div class="container">
     <div class="center">
         <a href="login"><button type="button" class="btn btn-dark btn-lg btn-block">Login</button></a>

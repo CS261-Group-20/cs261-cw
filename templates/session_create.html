@@ -13,6 +13,7 @@
         <div class="center">
             <form method="POST">
                 {{form.hidden_tag()}}
+                <!-- Render session_name, session_type, session_start_date and session_end_date fields and submit button-->
                 {{ render_field(form.session_name, class='form-control', placeholder='Session Name') }}
                 {{ render_field(form.session_type, class='form-control', placeholder='Session Type') }}
                 {{ render_field(form.session_start, class='form-control', placeholder='Session Start, Example 01-01-1991') }}

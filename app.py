@@ -195,24 +195,29 @@ def session_join():
 # host url route renders the host page and allows hosts to add additional questions to feedback form
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
-    # bar = create_plot(id)
-
-
 
     feedback_in_event = feedback.query.filter_by(event_id = id).all()
     feedback_time = []
     feedback_mood = []
+    positive_mood = []
+    negative_mood = []
     for feedbacks in feedback_in_event:
         feedback_time.append(feedbacks.feedback_date)
         feedback_mood.append(feedbacks.mood)
-    # days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
-    # positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
-    # negativeFeedbackAverage = [None, -1, -0.5, None, None]
+    
+    for mood in feedback_mood:
+        if mood >= 1:
+            positive_mood.append(mood)
+            negative_mood.append(None)
+        else:
+            positive_mood.append(None)
+            negative_mood.append(mood)
     
     fig = go.Figure()
-    fig.add_trace(go.Bar(x = feedback_time, y = feedback_mood, marker_color = 'green', name = 'positiveFeedback'))
-    # fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
+    fig.add_trace(go.Bar(x = feedback_time, y = positive_mood, marker_color = 'green', name = 'Positive<br>Feedback'))
+    fig.add_trace(go.Bar(x = feedback_time, y = negative_mood, marker_color = 'red', name = 'Negative<br>Feedback'))
     fig.update_layout(barmode='relative', title_text='Relative Barmode')
+    fig.update_yaxes(range=[-1,1])
 
     data = fig
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)

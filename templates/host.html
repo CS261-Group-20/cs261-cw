@@ -9,6 +9,9 @@
         max-height: 300px;
     }
 </style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -16,8 +19,11 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                <div class ="graph">
-                    <h2>Graph Goes Here</h2>
+                <div class="chart" id="bargraph">
+                    <script>
+                        var graphs = {{plot | safe}};
+                        Plotly.plot('bargraph',graphs,{});
+                    </script>
                 </div>
                 <div class="questions-form">
                     <!-- Display all questions currently in form -->
@@ -26,8 +32,9 @@
                     <div class=" current_questions">
                         {% if questions_in_session %}
                         {% for questions in questions_in_session %}
-                        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}</li>
-                        <a href="{{ url_for('delete_question', q_id=questions.feedback_question_id, event_id = id) }}"><button type="button"class="btn btn-light ">Delete Question</button></a> </td>
+                        <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}
+                        <a href="{{ url_for('delete_question', q_id=questions.feedback_question_id, event_id = id) }}"><button type="button"class="btn btn-danger ">Delete Question</button></a>
+                    </li>
                         {% endfor %}
                         {% endif %}
                 </div>

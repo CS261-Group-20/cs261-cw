@@ -10,6 +10,13 @@ from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinF
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
 from flask_bootstrap import Bootstrap
 
+import plotly
+import plotly.graph_objs as go
+
+import pandas as pd
+import numpy as np
+import json
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
@@ -18,6 +25,26 @@ bootstrap = Bootstrap(app)
 
 with app.app_context():
     db.init_app(app)
+
+def create_plot():
+
+
+    N = 40
+    x = np.linspace(0, 1, N)
+    y = np.random.randn(N)
+    df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
+
+
+    data = [
+        go.Bar(
+            x=df['x'], # assign x as the dataframe column 'x'
+            y=df['y']
+        )
+    ]
+
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return graphJSON
 
 # Default url route just redirects user to home webpage
 @app.route('/')
@@ -167,6 +194,7 @@ def session_join():
 # host url route renders the host page and allows hosts to add additional questions to feedback form
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
+    bar = create_plot()
     # Generate a new feedback_question_id one increment higher than the hightest existing feedback_question_id
     feedback_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
     if feedback_counter:
@@ -177,15 +205,12 @@ def host(id):
     event = eventTable.query.filter_by(event_id = id).first()
     form = HostForm()
 
-    # Get list of all users in this session
-    # TODO
     # Get list of all attendees in this session
     users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(eventAttendees.event_id == id).all()
     # Get host information
     user_host = users.query.filter_by(user_id = session["user_id"]).first()
     # Display the feedback questions for the attendee
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
-    # TODO
 
     # Display all feedback for current session:
     feedback_in_session = feedback.query.filter_by(event_id = id).all()
@@ -197,7 +222,7 @@ def host(id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for('host', id = id))
-    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session, id = id )
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session, id = id ,plot=bar )
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
@@ -269,3 +294,4 @@ def delete_question(event_id, q_id):
 # Run app
 if __name__ == "__main__":
     app.run(debug=True)
+

@@ -30,7 +30,6 @@ class SessionJoinForm(FlaskForm):
 
 class SessionQuestion(FlaskForm):
     question_id = HiddenField()
-    # TODO: GET QUESTION NAME 
     question = StringField(validators=[DataRequired()])
 
 class AttendeeForm(FlaskForm):

@@ -7,9 +7,10 @@ from models import db, users, feedbackQuestions, feedback
 #thing akram made, guess it just makes the output nicer
 def doAnalysis(string):
     strin = TextBlob(string)
-    string.correct()
+    # string.correct()
     string.lower()
     return strin
+
 #calculates the overall general metric
 def calcGeneralValue(mood, polarity, subjectivity):
     if mood == 0:
@@ -66,7 +67,8 @@ def processFeedbackData(eventID):
         f = doAnalysis(currentFB.message)
         tempList.append(currentFB.feedback_id)
         #tempList.append(currentFB.feedback_date)
-        timestamp = datetime.datetime.strptime(currentFB.timestamp, '%Y-%m-%d %H:%M:%S.%f') #database needs modifying
+        # timestamp = datetime.datetime.strptime(currentFB.feedback_date, '%Y-%m-%d %H:%M:%S.%f') #database needs modifying
+        timestamp = currentFB.feedback_date
         tempList.append(timestamp)
         tempList.append(currentFB.mood)
         tempList.append(currentFB.message)
@@ -92,7 +94,9 @@ def processFeedbackData(eventID):
 
     days = 0
 
-    if timeDiff < datetime.date(days = 1): #in theory checking if the difference between the two is less than one day, this lets us assume this was a one off event
+    startTimeDelta = startTime + datetime.timedelta(days=1)
+
+    if startTimeDelta > endTime: #in theory checking if the difference between the two is less than one day, this lets us assume this was a one off event
         #round all of the times to the nearest 10 mins, for all values at the same time, average them
         days = 0
         feedBackList[0][1] = roundTime(feedBackList[0][1], datetime.timedelta(minutes=10))
@@ -125,8 +129,9 @@ def processFeedbackData(eventID):
                 
    
 
-
-    return polarityValues, subjectivityValues, generalScoreValues, labels
+    print(generalScoreValues)
+    print(labels)
+    return generalScoreValues, labels
 
 
 

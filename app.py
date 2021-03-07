@@ -23,26 +23,9 @@ bootstrap = Bootstrap(app)
 with app.app_context():
     db.init_app(app)
 
-# def create_plot(id):
-#     feedback_in_event = feedback.query.filter_by(event_id = id).all()
-#     feedback_time = []
-#     feedback_mood = []
-#     for feedback in feedback_in_event:
-#         feedback_time.append[feedbacks.feedback_date]
-#         feedback_mood.append[feedbacks.mood]
-#     # days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
-#     # positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
-#     # negativeFeedbackAverage = [None, -1, -0.5, None, None]
-    
-#     fig = go.Figure()
-#     fig.add_trace(go.Bar(x = feedback_time, y = feedback_mood, marker_color = 'green', name = 'positiveFeedback'))
-#     # fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
-#     fig.update_layout(barmode='relative', title_text='Relative Barmode')
-
-#     data = fig
-#     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
-
-#     return graphJSON
+anonymousUser = users(0, 'Anonymous', '')
+db.session.add(anonymousUser)
+db.session.commit()
 
 # Default url route just redirects user to home webpage
 @app.route('/')

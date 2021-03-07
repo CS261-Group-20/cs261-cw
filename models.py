@@ -100,8 +100,9 @@ class feedback(db.Model):
     feedback_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     mood = db.Column(db.Float, nullable=False)
     sentiment = db.Column(db.Float, nullable=False)
+    isAnonymous = db.Column(db.Integer, default = 0)
 
-    def __init__(self, feedback_id, feedback_question_id, event_id, user_id, message, feedback_date, mood, sentiment):
+    def __init__(self, feedback_id, feedback_question_id, event_id, user_id, message, feedback_date, mood, sentiment, isAnonymous):
         self.feedback_id = feedback_id
         self.feedback_question_id = feedback_question_id
         self.event_id = event_id
@@ -110,6 +111,7 @@ class feedback(db.Model):
         self.feedback_date = feedback_date
         self.mood = mood
         self.sentiment = sentiment
+        self.isAnonymous = isAnonymous
 
     def __repr__(self):
-        return f"<Feedback {self.feedback_id},{self.feedback_question_id},{self.event_id},{self.user_id},{self.message},{self.user_id},{self.feedback_date},{self.mood},{self.sentiment}>"
+        return f"<Feedback {self.feedback_id},{self.feedback_question_id},{self.event_id},{self.user_id},{self.message},{self.user_id},{self.feedback_date},{self.mood},{self.sentiment}, {self.isAnonymous}>"

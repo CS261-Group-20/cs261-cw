@@ -181,9 +181,12 @@ def session_join():
         # If the event exists, add the user as an attendee to that session
         if event_joined:
             session["attendee_event_id"] = event_joined.event_id
-            new_attendee = eventAttendees(session["user_id"],session["attendee_event_id"])
-            db.session.add(new_attendee)
-            db.session.commit()
+            if "user_id" in session:  
+                new_attendee = eventAttendees(session["user_id"],session["attendee_event_id"])
+                attendee_in_session = eventAttendees.query.filter_by(user_id = session["user_id"]).first()
+                if not attendee_in_session:
+                    db.session.add(new_attendee)
+                    db.session.commit()
             return redirect(url_for('attendee', id = session["attendee_event_id"]))
         else:
             return "Session code incorrect"
@@ -281,7 +284,10 @@ def attendee(id):
             message = field.question.data
             fmt = "%d-%m-%Y, %H:%M:%S"
             feedback_time = datetime.datetime.strptime(datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
-            new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,)
+            if "user_id" in session:
+                new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,)
+            else:
+                new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, 1 , 1,)
             db.session.add(new_feedback)
             db.session.commit()
             j += 1

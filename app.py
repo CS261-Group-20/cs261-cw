@@ -23,20 +23,26 @@ bootstrap = Bootstrap(app)
 with app.app_context():
     db.init_app(app)
 
-def create_plot():
+# def create_plot(id):
+#     feedback_in_event = feedback.query.filter_by(event_id = id).all()
+#     feedback_time = []
+#     feedback_mood = []
+#     for feedback in feedback_in_event:
+#         feedback_time.append[feedbacks.feedback_date]
+#         feedback_mood.append[feedbacks.mood]
+#     # days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
+#     # positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
+#     # negativeFeedbackAverage = [None, -1, -0.5, None, None]
+    
+#     fig = go.Figure()
+#     fig.add_trace(go.Bar(x = feedback_time, y = feedback_mood, marker_color = 'green', name = 'positiveFeedback'))
+#     # fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
+#     fig.update_layout(barmode='relative', title_text='Relative Barmode')
 
-    days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
-    positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
-    negativeFeedbackAverage = [None, -1, -0.5, None, None]
+#     data = fig
+#     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(x = days, y = positiveFeedbackAverage, marker_color = 'green', name = 'positiveFeedback'))
-    fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
-
-    data = fig
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return graphJSON
+#     return graphJSON
 
 # Default url route just redirects user to home webpage
 @app.route('/')
@@ -186,7 +192,28 @@ def session_join():
 # host url route renders the host page and allows hosts to add additional questions to feedback form
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
-    bar = create_plot()
+    # bar = create_plot(id)
+
+
+
+    feedback_in_event = feedback.query.filter_by(event_id = id).all()
+    feedback_time = []
+    feedback_mood = []
+    for feedbacks in feedback_in_event:
+        feedback_time.append(feedbacks.feedback_date)
+        feedback_mood.append(feedbacks.mood)
+    # days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
+    # positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
+    # negativeFeedbackAverage = [None, -1, -0.5, None, None]
+    
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x = feedback_time, y = feedback_mood, marker_color = 'green', name = 'positiveFeedback'))
+    # fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
+    fig.update_layout(barmode='relative', title_text='Relative Barmode')
+
+    data = fig
+    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+
     # Generate a new feedback_question_id one increment higher than the hightest existing feedback_question_id
     feedback_counter = feedbackQuestions.query.order_by(feedbackQuestions.feedback_question_id.desc()).first()
     if feedback_counter:
@@ -214,7 +241,7 @@ def host(id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for('host', id = id))
-    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session, id = id ,plot=bar )
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session, id = id ,plot=graphJSON )
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 @app.route('/attendee/<id>', methods=['GET', 'POST'])

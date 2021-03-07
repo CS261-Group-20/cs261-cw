@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, RadioField, DateField, FieldList, FormField
+from wtforms import StringField, PasswordField, SubmitField, RadioField, DateField, FieldList, FormField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from wtforms.fields.simple import HiddenField
 
@@ -35,6 +35,7 @@ class SessionQuestion(FlaskForm):
 class AttendeeForm(FlaskForm):
     feedback_questions = FieldList(FormField(SessionQuestion))
     mood_type = RadioField('Mood', choices=[(1, ':D'),(2, ':I'),(3, ':(')],validators=[DataRequired()] )
+    checkbox = BooleanField('Send Anonymously', default=False)
     submit = SubmitField('Submit Feedback')
 
 class HostForm(FlaskForm):

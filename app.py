@@ -219,7 +219,7 @@ def host(id):
     questions_in_session = feedbackQuestions.query.filter_by(event_id = id).all()
 
     # Display all feedback for current session:
-    feedback_in_session = feedback.query.filter_by(event_id = id).all()
+    feedback_in_session = feedback.query.join(users, users.user_id == feedback.user_id).add_columns(users.username, feedback.message, feedback.feedback_date).filter(feedback.event_id == id).all()
 
     # When user submits a new question to be added to feedback form, add that queston to the database
     if request.method == 'POST':
@@ -264,14 +264,17 @@ def attendee(id):
     # When a user submits feedback, store the feedback message and timestamp at which feedback was submitted
     if request.method == 'POST':
         mood = request.form["mood_type"]
+        is_anon = request.form.get("checkbox", False)
         for field in form["feedback_questions"]:
             message = field.question.data
             fmt = "%d-%m-%Y, %H:%M:%S"
             feedback_time = datetime.datetime.strptime(datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
-            if "user_id" in session:
-                new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,)
+            if is_anon:
+                new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, 1 , 1,1)
+            elif "user_id" in session:
+                new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, 1 , 1,0)
             else:
-                new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, 1 , 1,)
+                new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, 1 , 1,0)
             db.session.add(new_feedback)
             db.session.commit()
             j += 1

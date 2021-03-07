@@ -1,5 +1,4 @@
 from textblob import TextBlob
-import csv
 import datetime
 from models import db, users, feedbackQuestions, feedback
 
@@ -86,17 +85,49 @@ def processFeedbackData(eventID):
 
     timeDiff = endTime - startTime
     
-    values = []
+    polarityValues = []
+    subjectivityValues = []
+    generalScoreValues = []
     labels = []
+
+    days = 0
 
     if timeDiff < datetime.date(days = 1): #in theory checking if the difference between the two is less than one day, this lets us assume this was a one off event
         #round all of the times to the nearest 10 mins, for all values at the same time, average them
+        days = 0
+        feedBackList[0][1] = roundTime(feedBackList[0][1], datetime.timedelta(minutes=10))
+    else:
+        days = 1
+        feedBackList[0][1] = feedBackList[0][1].date()
         
-        for x in range(0, len(feedBackList) - 1):
+        
+    for x in range(1, len(feedBackList) - 1):
+        #round the time
+
+        if days == 1:
+            feedBackList[x][1] = feedBackList[x][1].date() #convert to a date, just removes the time
+        else:
             feedBackList[x][1] = roundTime(feedBackList[x][1], datetime.timedelta(minutes=10))
+        #if the current time is not within the same ten minute block as the previous time, meaning a new block has been transitioned to
+        #this means that a new point on the graph will be required so can average out all the values for the previous chunk
+        if feedBackList[x][1] != feedBackList[x-1][1] or x == len(feedBackList) - 1:
+            labels.append(feedBackList[x-1][1])
+            y = x-1
+            while y > 0 and feedBackList[x-1][1] == feedBackList[y][1]:
+                y -= 1
+            #y = first value outside of the range, therefore y+1 is the needed value to dictate the range
             
-            if feedBackList[x][1] != feedBackList[x-1][1]:
+            
+            #slice is, inclusive - exclusive, so y+1 should be the first value in the block of same timestamps and x-1 is the last, therefore bounds are y+1 - x
+            polarityValues.append(calcAverage(feedBackList[y+1:x], 4)) #polarity
+            subjectivityValues.append(calcAverage(feedBackList[y+1:x], 5)) #subjectivity
+            generalScoreValues.append(calcAverage(feedBackList[y+1:x], 6)) #general score
                 
+   
 
 
-        #so converted all timestamps to the nearest 10 minutes
+    return polarityValues, subjectivityValues, generalScoreValues, labels
+
+
+
+            

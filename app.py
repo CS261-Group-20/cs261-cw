@@ -22,10 +22,11 @@ bootstrap = Bootstrap(app)
 
 with app.app_context():
     db.init_app(app)
+    anonymousUser = users(0, 'Anonymous', '')
+    db.session.add(anonymousUser)
+    db.session.commit()
 
-anonymousUser = users(0, 'Anonymous', '')
-db.session.add(anonymousUser)
-db.session.commit()
+
 
 # Default url route just redirects user to home webpage
 @app.route('/')

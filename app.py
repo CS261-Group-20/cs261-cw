@@ -197,7 +197,7 @@ def host(id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for('host', id = id))
-    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session )
+    return render_template("host.html", form=form, users_in_session = users_in_session, user_host = user_host, questions_in_session = questions_in_session, event = event, feedback_in_session= feedback_in_session, id = id )
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 @app.route('/attendee/<id>', methods=['GET', 'POST'])
@@ -255,6 +255,16 @@ def user_homepage():
     else:
         flash('Not logged in!')
         return redirect(url_for('login'))
+
+# The user_homepage url route provides the user with a list of all sessions in which the user is present as a host or as an attendee
+@app.route('/delete_question/<event_id>/<q_id>', methods=['GET', 'POST'])
+def delete_question(event_id, q_id):
+    # Remove the question from feedback_questions
+    feedbackQuestions.query.filter_by(feedback_question_id = q_id).delete()
+    # Remove any feedback which answers that question
+    feedback.query.filter_by(feedback_question_id = q_id).delete()
+    db.session.commit()
+    return redirect(url_for('host', id = event_id))
 
 # Run app
 if __name__ == "__main__":

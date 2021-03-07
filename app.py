@@ -9,14 +9,11 @@ from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
 from flask_bootstrap import Bootstrap
-
 import plotly
 import plotly.graph_objs as go
-
 import pandas as pd
 import numpy as np
 import json
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
@@ -28,20 +25,15 @@ with app.app_context():
 
 def create_plot():
 
+    days = ['day 1', 'day 2', 'day 3', 'day 4', 'day 5']
+    positiveFeedbackAverage = [0.2, None, None, 0.7, 1]
+    negativeFeedbackAverage = [None, -1, -0.5, None, None]
 
-    N = 40
-    x = np.linspace(0, 1, N)
-    y = np.random.randn(N)
-    df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x = days, y = positiveFeedbackAverage, marker_color = 'green', name = 'positiveFeedback'))
+    fig.add_trace(go.Bar(x = days, y = negativeFeedbackAverage, marker_color = 'red', name = 'negativeFeedback'))
 
-
-    data = [
-        go.Bar(
-            x=df['x'], # assign x as the dataframe column 'x'
-            y=df['y']
-        )
-    ]
-
+    data = fig
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON

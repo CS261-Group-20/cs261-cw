@@ -200,7 +200,7 @@ def session_join():
 def host(id):
 
     values, labels = processFeedbackData(id)
-    
+    print(id)
     feedback_time = labels
     feedback_mood = values
     positive_mood = []

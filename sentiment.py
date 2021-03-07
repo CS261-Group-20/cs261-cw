@@ -57,7 +57,6 @@ def processFeedbackData(eventID):
 
 
     feedbackQuery = feedback.query.filter_by(event_id = eventID).all()
-
     feedBackList = []
 
     #grabs the values for each and shoves into a nice list
@@ -77,6 +76,7 @@ def processFeedbackData(eventID):
         tempList.append(calcGeneralValue(currentFB.mood, f.sentiment.polarity, f.sentiment.subjectivity))
         feedBackList.append(tempList)
     
+    print(feedBackList)
     #so in theory there is now a list which it itself is a list of messages, then the values for each message as well as id and date
 
     #for each list within this list, 0 = id, 1 = timestamp, 2 = mood, 3 = message, 4 = polarity, 5 = subjectivity, 6 = general score

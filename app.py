@@ -206,8 +206,9 @@ def host(id):
 
     feedback_counter = feedback.query.filter_by(event_id=id).count()
     if feedback_counter != 0:
-        values, labels = processFeedbackData(id)
+        values, labels, avg_score = processFeedbackData(id)
     else:
+        avg_score = 0
         values = []
         labels = []
     print(id)
@@ -266,7 +267,7 @@ def host(id):
         db.session.commit()
         return redirect(url_for('host', id=id))
     return render_template("host.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, event=event, feedback_in_session=feedback_in_session,
-                           id=id, plot=graphJSON, title='Score over time', labels=labels, values=values)
+                           id=id, plot=graphJSON, title='Score over time', labels=labels, values=values, avg_score = avg_score )
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 

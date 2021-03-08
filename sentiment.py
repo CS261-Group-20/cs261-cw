@@ -61,7 +61,7 @@ def processFeedbackData(eventID):
         tempList = []
         currentFB = feedbackQuery[x]
         analysis = TextBlob(currentFB.message).sentiment
-        #print("analysis = ", analysis, "message: ", currentFB.message, "general score", calcGeneralValue(currentFB.mood, analysis.polarity, analysis.subjectivity))
+        print("analysis = ", analysis, "message: ", currentFB.message, "general score", calcGeneralValue(currentFB.mood, analysis.polarity, analysis.subjectivity))
         tempList.append(currentFB.feedback_id)
         #tempList.append(currentFB.feedback_date)
         # timestamp = datetime.datetime.strptime(currentFB.feedback_date, '%Y-%m-%d %H:%M:%S.%f') #database needs modifying
@@ -85,8 +85,8 @@ def processFeedbackData(eventID):
     startTime = feedBackList[0][1]
     endTime = feedBackList[len(feedBackList) - 1][1]
 
-   # print("startTime = ", startTime)
-    #print("endTime = ", endTime)
+    print("startTime = ", startTime)
+    print("endTime = ", endTime)
 
         
     polarityValues = []
@@ -119,12 +119,15 @@ def processFeedbackData(eventID):
         #if the current time is not within the same ten minute block as the previous time, meaning a new block has been transitioned to
         #this means that a new point on the graph will be required so can average out all the values for the previous chunk
 
-        #print("time1", feedBackList[x][1])
-       # print("time2", feedBackList[x-1][1])
+        print("time1", feedBackList[x][1])
+        print("time2", feedBackList[x-1][1])
 
         if feedBackList[x][1] != feedBackList[x-1][1] or x == len(feedBackList) - 1:
             
-            
+            if feedBackList[x][1] != feedBackList[x-1][1] and x == len(feedBackList) - 1: 
+
+                labels.append(feedBackList[x][1])
+                generalScoreValues.append(calcAverage(feedBackList[x:x+1], 6))                      
 
            # print("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             
@@ -134,8 +137,8 @@ def processFeedbackData(eventID):
                 y -= 1
             #y = first value outside of the range, therefore y+1 is the needed value to dictate the range
             
-           # print("y = ", y)
-           # print("x = ", x)
+            print("y = ", y)
+            print("x = ", x)
             #slice is, inclusive - exclusive, so y+1 should be the first value in the block of same timestamps and x-1 is the last, therefore bounds are y+1 - x
 
            # print("the slice is:", feedBackList[y+1:x])
@@ -145,10 +148,12 @@ def processFeedbackData(eventID):
             generalScoreValues.append(calcAverage(feedBackList[y+1:x], 6)) #general score
                 
    
+    totalAverageScore = calcAverage(feedBackList, 6)
 
+    print(totalAverageScore)
     print("the values", generalScoreValues)
     print("the labels", labels)
-    return generalScoreValues, labels
+    return generalScoreValues, labels, totalAverageScore
 
 
 

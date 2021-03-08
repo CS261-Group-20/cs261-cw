@@ -17,10 +17,6 @@ import json
 from sentiment import processFeedbackData
 
 
-
-
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
@@ -32,10 +28,7 @@ with app.app_context():
 # Default url route just redirects user to home webpage
 
 
-
-#here we define our menu items
-
-
+# here we define our menu items
 
 
 @app.route('/')
@@ -173,7 +166,8 @@ def session_create():
             session["host_event_id"] = i + 1
             return redirect(url_for('host', id=session["host_event_id"]))
     else:
-        return "You are not logged in!"
+        flash('Not logged in!')
+        return redirect(url_for('login'))
     return render_template("session_create.html", form=form)
 
 # Session_join url route handles session joining
@@ -210,7 +204,7 @@ def session_join():
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
 
-    feedback_counter = feedback.query.filter_by(event_id = id).count()
+    feedback_counter = feedback.query.filter_by(event_id=id).count()
     if feedback_counter != 0:
         values, labels = processFeedbackData(id)
     else:
@@ -221,7 +215,7 @@ def host(id):
     feedback_mood = values
     positive_mood = []
     negative_mood = []
-    
+
     for mood in feedback_mood:
         if mood >= 0:
             positive_mood.append(mood)
@@ -231,11 +225,12 @@ def host(id):
             negative_mood.append(mood)
 
     fig = go.Figure()
-    fig.add_trace(go.Bar(x=feedback_time, y=positive_mood, marker_color='green', name = 'Positive<br>Feedback'))
-    fig.add_trace(go.Bar(x=feedback_time, y=negative_mood, marker_color='red', name = 'Negative<br>Feedback'))
+    fig.add_trace(go.Bar(x=feedback_time, y=positive_mood,
+                         marker_color='green', name='Positive<br>Feedback'))
+    fig.add_trace(go.Bar(x=feedback_time, y=negative_mood,
+                         marker_color='red', name='Negative<br>Feedback'))
     fig.update_layout(barmode='relative', title_text='Mood Over Time')
     fig.update_yaxes(range=[-1, 1])
-    fig.update_xaxes(range=[labels[1], labels[-1]])
 
     data = fig
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
@@ -260,8 +255,8 @@ def host(id):
     questions_in_session = feedbackQuestions.query.filter_by(event_id=id).all()
 
     # Display all feedback for current session:
-    feedback_in_session = feedback.query.join(users, users.user_id == feedback.user_id).add_columns(
-        users.username, feedback.message, feedback.feedback_date).filter(feedback.event_id == id).all()
+    feedback_in_session = feedback.query.join(users, users.user_id == feedback.user_id).join(feedbackQuestions,feedbackQuestions.feedback_question_id == feedback.feedback_question_id).add_columns(
+        users.username, feedback.message, feedback.feedback_date, feedbackQuestions.feedback_question).filter(feedback.event_id == id).all()
 
     # When user submits a new question to be added to feedback form, add that queston to the database
     if request.method == 'POST':
@@ -270,7 +265,7 @@ def host(id):
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for('host', id=id))
-    return render_template("host.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session= questions_in_session, event = event, feedback_in_session= feedback_in_session,
+    return render_template("host.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, event=event, feedback_in_session=feedback_in_session,
                            id=id, plot=graphJSON, title='Score over time', labels=labels, values=values)
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
@@ -336,7 +331,7 @@ def attendee(id):
             db.session.commit()
             j += 1
         return redirect(url_for('attendee', id=id))
-    return render_template("attendee.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, counter = counter)
+    return render_template("attendee.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, counter=counter)
 
 # The user_homepage url route provides the user with a list of all sessions in which the user is present as a host or as an attendee
 

@@ -8,6 +8,16 @@
         overflow-y: auto;
         max-height: 300px;
     }
+
+    .my-custom-scrollbar {
+        position: relative;
+        height: 200px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
 </style>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -26,10 +36,8 @@
                     <div class="chart" id="bargraph">
                         <script>
                             var graphs = {{ plot | safe}};
-                            Plotly.plot('bargraph', graphs, {displayModeBar: false});
+                            Plotly.plot('bargraph', graphs, { displayModeBar: false });
                         </script>
-
-
 
                     </div>
                     <div class="questions-form">
@@ -40,9 +48,12 @@
                             {% if questions_in_session %}
                             {% for questions in questions_in_session %}
                             <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}
-                            {% if loop.index0 != 0 %}
-                            <a href="{{ url_for('delete_question', q_id=questions.feedback_question_id, event_id = id) }}"><buttontype="button" class="btn btn-danger ">Delete Question</button></a>
-                            {% endif %}
+                                {% if loop.index0 != 0 %}
+                                <a
+                                    href="{{ url_for('delete_question', q_id=questions.feedback_question_id, event_id = id) }}">
+                                    <buttontype="button" class="btn btn-danger ">Delete Question</button>
+                                </a>
+                                {% endif %}
                             </li>
                             {% endfor %}
                             {% endif %}
@@ -92,25 +103,29 @@
                 <!-- Display all feedback received -->
                 <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
                 {% if feedback_in_session %}
-                <table class="table table-bordered table-sm">
-                    <thead style="color:rgb(255, 255, 255)">
-                        <tr>
-                            <th>Username</th>
-                            <th>Feedback</th>
-                            <th>Feedback Date</th>
-                        </tr>
-                    </thead>
-                    <tbody style="color:rgb(255, 255, 255)">
-                        {% for feedback in feedback_in_session %}
-                        <tr>
-                            <td>{{ feedback.username }}</td>
-                            <td>{{ feedback.message }}</td>
-                            <td> {{feedback.feedback_date}} </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% endif %}
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table table-bordered table-sm">
+                        <thead style="color:rgb(255, 255, 255)">
+                            <tr>
+                                <th>Username</th>
+                                <th>Question</th>
+                                <th>Feedback</th>
+                                <th>Feedback Date</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color:rgb(255, 255, 255)">
+                            {% for feedback in feedback_in_session %}
+                            <tr>
+                                <td>{{ feedback.username }}</td>
+                                <td>{{ feedback.feedback_question}}</td>
+                                <td>{{ feedback.message }}</td>
+                                <td> {{feedback.feedback_date}} </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

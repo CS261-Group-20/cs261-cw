@@ -8,7 +8,7 @@ from collections import namedtuple
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
-from flask_bootstrap import Bootstrap
+# from flask_bootstrap import Bootstrap
 import plotly
 import plotly.graph_objs as go
 import pandas as pd
@@ -16,15 +16,26 @@ import numpy as np
 import json
 from sentiment import processFeedbackData
 
+
+
+
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
-bootstrap = Bootstrap(app)
+# bootstrap = Bootstrap(app)
 
 with app.app_context():
     db.init_app(app)
 
 # Default url route just redirects user to home webpage
+
+
+
+#here we define our menu items
+
+
 
 
 @app.route('/')
@@ -199,7 +210,12 @@ def session_join():
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
 
-    values, labels = processFeedbackData(id)
+    feedback_counter = feedback.query.filter_by(event_id = id).count()
+    if feedback_counter != 0:
+        values, labels = processFeedbackData(id)
+    else:
+        values = []
+        labels = []
     print(id)
     feedback_time = labels
     feedback_mood = values
@@ -217,8 +233,9 @@ def host(id):
     fig = go.Figure()
     fig.add_trace(go.Bar(x=feedback_time, y=positive_mood, marker_color='green', name = 'Positive<br>Feedback'))
     fig.add_trace(go.Bar(x=feedback_time, y=negative_mood, marker_color='red', name = 'Negative<br>Feedback'))
-    fig.update_layout(barmode='relative', title_text='Relative Barmode')
+    fig.update_layout(barmode='relative', title_text='Mood Over Time')
     fig.update_yaxes(range=[-1, 1])
+    fig.update_xaxes(range=[labels[1], labels[-1]])
 
     data = fig
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)

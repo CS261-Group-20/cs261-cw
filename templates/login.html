@@ -18,7 +18,9 @@
                     <div class="form-group">
                         <!-- Render username and password fields and submit button-->
                         {{form.hidden_tag()}}
+                        <h5>{{form.username.label}}</h5>
                         {{ render_field(form.username, class='form-control', placeholder='Username') }}
+                        <h5>{{form.password.label}}</h5>
                         {{ render_field(form.password, class='form-control', placeholder='Password') }}
                         {{ render_field(form.submit, class='btn btn-success', placeholder='Password') }}
                     </div>

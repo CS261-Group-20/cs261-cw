@@ -62,6 +62,7 @@
 
                     <!-- Render add_feedback_question field and submit button-->
                     <form method="POST">
+                        <h5>{{form.add_feedback_question.label}}</h5>
                         {{ render_field(form.add_feedback_question, class='form-control') }}
                         {{ render_field(form.submit, class='btn btn-success') }}
                     </form>

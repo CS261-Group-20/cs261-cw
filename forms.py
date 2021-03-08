@@ -30,7 +30,7 @@ class SessionJoinForm(FlaskForm):
 
 class SessionQuestion(FlaskForm):
     question_id = HiddenField()
-    question = StringField(validators=[DataRequired()])
+    question = StringField()
 
 class AttendeeForm(FlaskForm):
     feedback_questions = FieldList(FormField(SessionQuestion))
@@ -40,4 +40,4 @@ class AttendeeForm(FlaskForm):
 
 class HostForm(FlaskForm):
     add_feedback_question = StringField('Add Question', validators=[DataRequired()])
-    submit = SubmitField('Submit Feedback')
+    submit = SubmitField('Submit Question')

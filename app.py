@@ -316,21 +316,22 @@ def attendee(id):
         is_anon = request.form.get("checkbox", False)
         for field in form["feedback_questions"]:
             message = field.question.data
-            fmt = "%d-%m-%Y, %H:%M:%S"
-            feedback_time = datetime.datetime.strptime(
-                datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
-            if is_anon:
-                new_feedback = feedback(
-                    j, field.question_id, id, 0, message, feedback_time, mood, 1, 1)
-            elif "user_id" in session:
-                new_feedback = feedback(
-                    j, field.question_id, id, session["user_id"], message, feedback_time, mood, 1, 0)
-            else:
-                new_feedback = feedback(
-                    j, field.question_id, id, 0, message, feedback_time, mood, 1, 0)
-            db.session.add(new_feedback)
-            db.session.commit()
-            j += 1
+            if message:
+                fmt = "%d-%m-%Y, %H:%M:%S"
+                feedback_time = datetime.datetime.strptime(
+                    datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
+                if is_anon:
+                    new_feedback = feedback(
+                        j, field.question_id, id, 0, message, feedback_time, mood, 1, 1)
+                elif "user_id" in session:
+                    new_feedback = feedback(
+                        j, field.question_id, id, session["user_id"], message, feedback_time, mood, 1, 0)
+                else:
+                    new_feedback = feedback(
+                        j, field.question_id, id, 0, message, feedback_time, mood, 1, 0)
+                db.session.add(new_feedback)
+                db.session.commit()
+                j += 1
         return redirect(url_for('attendee', id=id))
     return render_template("attendee.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, counter=counter)
 

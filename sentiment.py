@@ -4,26 +4,21 @@ from models import db, users, feedbackQuestions, feedback
 
 #this file may actually not be needed but keeps things cleaner for now
 
-#thing akram made, guess it just makes the output nicer
-def doAnalysis(string):
-    strin = TextBlob(string)
-    string.correct()
-    string.lower()
-    return strin
+
 #calculates the overall general metric
 def calcGeneralValue(mood, polarity, subjectivity):
     if mood == 0:
-        return ((polarity * (1-subjectivity) * 0.5) * 10)
+        return ((polarity * (subjectivity) * 0.5))
     elif mood == 1: 
         if polarity > 0: #mood given matches polarity
-            return ((polarity * (1-subjectivity)) * 10)
+            return ((polarity * (subjectivity)))
         elif polarity <= 0: #mood given does not match polarity
-            return ((polarity * (1-subjectivity) * 0.25) * 10)
+            return ((polarity * (subjectivity) * 0.25))
     else: #mood = -1
         if polarity < 0: #mood given matches polarity
-            return ((polarity * (1-subjectivity)) * 10)
+            return ((polarity * (subjectivity)))
         elif polarity >= 0: #mood given does not match polarity
-            return ((polarity * (1-subjectivity) * 0.25) * 10)
+            return ((polarity * (subjectivity) * 0.25))
 
 def roundTime(dt=None, dateDelta=datetime.timedelta(minutes=1)):
     """Round a datetime object to a multiple of a timedelta
@@ -43,8 +38,11 @@ def roundTime(dt=None, dateDelta=datetime.timedelta(minutes=1)):
 
 def calcAverage(values, chosenColumn):
     total = 0
-    for x in range(0, len(values) - 1):
-        total += values[chosenColumn]
+    for x in range(0, len(values)):
+        total += values[x][chosenColumn]
+        #print("general score = ", values[x][chosenColumn])
+
+    #print("total = ", total)
     return total/len(values)
 #process all the feedback for a given event, this will be dictated by which event is being accessed though the website??? either way here is just a parameter
 def processFeedbackData(eventID):
@@ -56,25 +54,29 @@ def processFeedbackData(eventID):
 
 
     feedbackQuery = feedback.query.filter_by(event_id = eventID).all()
-
     feedBackList = []
 
     #grabs the values for each and shoves into a nice list
     for x in range(0, len(feedbackQuery)):
         tempList = []
         currentFB = feedbackQuery[x]
-        f = doAnalysis(currentFB.message)
+        analysis = TextBlob(currentFB.message).sentiment
+        #print("analysis = ", analysis, "message: ", currentFB.message, "general score", calcGeneralValue(currentFB.mood, analysis.polarity, analysis.subjectivity))
         tempList.append(currentFB.feedback_id)
         #tempList.append(currentFB.feedback_date)
-        timestamp = datetime.datetime.strptime(currentFB.timestamp, '%Y-%m-%d %H:%M:%S.%f') #database needs modifying
+        # timestamp = datetime.datetime.strptime(currentFB.feedback_date, '%Y-%m-%d %H:%M:%S.%f') #database needs modifying
+        timestamp = currentFB.feedback_date
         tempList.append(timestamp)
         tempList.append(currentFB.mood)
         tempList.append(currentFB.message)
-        tempList.append(f.sentiment.polarity)
-        tempList.append(f.sentiment.subjectivity)
-        tempList.append(calcGeneralValue(currentFB.mood, f.sentiment.polarity, f.sentiment.subjectivity))
+        tempList.append(analysis.polarity)
+        tempList.append(analysis.subjectivity)
+        tempList.append(calcGeneralValue(currentFB.mood, analysis.polarity, analysis.subjectivity))
         feedBackList.append(tempList)
     
+   # print(feedBackList)
+    #print("length of feedbacklist should be 4 it is actually: ", len(feedBackList))
+    #print("first entry to list", feedBackList[0])
     #so in theory there is now a list which it itself is a list of messages, then the values for each message as well as id and date
 
     #for each list within this list, 0 = id, 1 = timestamp, 2 = mood, 3 = message, 4 = polarity, 5 = subjectivity, 6 = general score
@@ -83,8 +85,10 @@ def processFeedbackData(eventID):
     startTime = feedBackList[0][1]
     endTime = feedBackList[len(feedBackList) - 1][1]
 
-    timeDiff = endTime - startTime
-    
+   # print("startTime = ", startTime)
+    #print("endTime = ", endTime)
+
+        
     polarityValues = []
     subjectivityValues = []
     generalScoreValues = []
@@ -92,41 +96,61 @@ def processFeedbackData(eventID):
 
     days = 0
 
-    if timeDiff < datetime.date(days = 1): #in theory checking if the difference between the two is less than one day, this lets us assume this was a one off event
+    startTimeDelta = startTime + datetime.timedelta(days=1)
+
+    if startTimeDelta > endTime: #in theory checking if the difference between the two is less than one day, this lets us assume this was a one off event
         #round all of the times to the nearest 10 mins, for all values at the same time, average them
         days = 0
         feedBackList[0][1] = roundTime(feedBackList[0][1], datetime.timedelta(minutes=10))
+        
     else:
         days = 1
         feedBackList[0][1] = feedBackList[0][1].date()
-        
-        
-    for x in range(1, len(feedBackList) - 1):
+    
+    #print("value of days = ", days)   
+    for x in range(1, len(feedBackList)):
         #round the time
 
+        
         if days == 1:
             feedBackList[x][1] = feedBackList[x][1].date() #convert to a date, just removes the time
         else:
             feedBackList[x][1] = roundTime(feedBackList[x][1], datetime.timedelta(minutes=10))
         #if the current time is not within the same ten minute block as the previous time, meaning a new block has been transitioned to
         #this means that a new point on the graph will be required so can average out all the values for the previous chunk
+
+        #print("time1", feedBackList[x][1])
+       # print("time2", feedBackList[x-1][1])
+
         if feedBackList[x][1] != feedBackList[x-1][1] or x == len(feedBackList) - 1:
+            
+            
+
+           # print("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+            
             labels.append(feedBackList[x-1][1])
             y = x-1
-            while y > 0 and feedBackList[x-1][1] == feedBackList[y][1]:
+            while y > -1 and feedBackList[x-1][1] == feedBackList[y][1]:
                 y -= 1
             #y = first value outside of the range, therefore y+1 is the needed value to dictate the range
             
-            
+           # print("y = ", y)
+           # print("x = ", x)
             #slice is, inclusive - exclusive, so y+1 should be the first value in the block of same timestamps and x-1 is the last, therefore bounds are y+1 - x
-            polarityValues.append(calcAverage(feedBackList[y+1:x], 4)) #polarity
-            subjectivityValues.append(calcAverage(feedBackList[y+1:x], 5)) #subjectivity
+
+           # print("the slice is:", feedBackList[y+1:x])
+
+            #polarityValues.append(calcAverage(feedBackList[y:x], 4)) #polarity
+            #subjectivityValues.append(calcAverage(feedBackList[y:x], 5)) #subjectivity
             generalScoreValues.append(calcAverage(feedBackList[y+1:x], 6)) #general score
                 
    
 
+    print("the values", generalScoreValues)
+    print("the labels", labels)
+    return generalScoreValues, labels
 
-    return polarityValues, subjectivityValues, generalScoreValues, labels
+
 
 
 

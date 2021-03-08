@@ -97,7 +97,13 @@
         <div class="card text-white bg-dark mb-3 my-3 mx-3">
             <div class="mood">
                 <h2> Overall Mood </h2>
-                <h3> {{avg_score}} </h3>
+                {% if avg_score > -0.25 and avg_score < 0.25  %}
+                <h3 style="color:rgb(255, 255, 255)" > Neutral </h3>
+                {% elif avg_score > 0.25 %}
+                <h3 style="color:rgb(0, 255, 0)" > Positive </h3>
+                {% else %}
+                <h3 style="color:rgb(255, 0, 0)" > Negative </h3>
+                {% endif %}
             </div>
             <div class="feedback">
                 <!-- Display all feedback received -->

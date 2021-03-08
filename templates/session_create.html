@@ -14,9 +14,13 @@
             <form method="POST">
                 {{form.hidden_tag()}}
                 <!-- Render session_name, session_type, session_start_date and session_end_date fields and submit button-->
+                <h5>{{form.session_name.label}}</h5>
                 {{ render_field(form.session_name, class='form-control', placeholder='Session Name') }}
+                <h5>{{form.session_type.label}}</h5>
                 {{ render_field(form.session_type, class='form-control', placeholder='Session Type') }}
+                <h5>{{form.session_start.label}}</h5>
                 {{ render_field(form.session_start, class='form-control', placeholder='Session Start, Example 01-01-1991') }}
+                <h5>{{form.session_end.label}}</h5>
                 {{ render_field(form.session_end, class='form-control', placeholder='Session End, Example 01-01-1992') }}
                 {{ render_field(form.submit, class='btn btn-success', placeholder='Password') }}
             </form>

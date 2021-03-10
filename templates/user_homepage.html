@@ -32,77 +32,82 @@
 
 
 <div class="container-fluid center">
-    <div class="card text-white bg-dark mb-3 my-5 mx-5">
-        <div class="flash">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for msg in messages %}
-            <h2 style="color:rgb(255, 255, 255)">{{msg}}</h2>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-        </div>
-        <div class="card-header">
-            <h2>Events Hosting</h2>
-        </div>
-        <!-- Display all events user is hosting-->
-        {% if events_host_user %}
-        <div class="card text-white bg-secondary my-2 mx-2">
-            <table class="table">
-                <thead class="thead-dark" style="color:rgb(255, 255, 255)">
-                    <tr>
-                        <th>Event Name</th>
-                        <th>Event Type</th>
-                        <th>Join Event</th>
-                    </tr>
-                </thead>
-                <tbody style="color:rgb(255, 255, 255)">
-                    {% for events_hosted in events_host_user %}
-                    <tr>
-                        <td>{{ events_hosted.event_desc }}</td>
-                        <td>{{ events_hosted.event_type }}</td>
-                        <td> <a href="{{ url_for('host', id=events_hosted.event_id) }}"><button type="button"
-                                    class="btn btn-light ">Join Session</button></a> </td>
-                    </tr>
+    <div class="row justify-content-center">
+        <div class="col-xs-12">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="flash">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for msg in messages %}
+                    <h2 style="color:rgb(255, 255, 255)">{{msg}}</h2>
                     {% endfor %}
-                </tbody>
-            </table>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="card-header">
+                    <h2>Events Hosting</h2>
+                </div>
+                <!-- Display all events user is hosting-->
+                {% if events_host_user %}
+                <div class="card text-white bg-secondary my-2 mx-2">
+                    <table class="table">
+                        <thead class="thead-dark" style="color:rgb(255, 255, 255)">
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Event Type</th>
+                                <th>Join Event</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color:rgb(255, 255, 255)">
+                            {% for events_hosted in events_host_user %}
+                            <tr>
+                                <td>{{ events_hosted.event_desc }}</td>
+                                <td>{{ events_hosted.event_type }}</td>
+                                <td> <a href="{{ url_for('host', id=events_hosted.event_id) }}"><button type="button"
+                                            class="btn btn-light ">Join Session</button></a> </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div style="color:rgb(255, 255, 255)">No events currently being hosted!</div>
+                {% endif %}
+            </div>
         </div>
-        {% else %}
-        <div style="color:rgb(255, 255, 255)">No events currently being hosted!</div>
-        {% endif %}
-    </div>
-    <div class="card text-white bg-dark mb-3 my-5 mx-5">
-        <div class="card-header">
-            <h2>Events Attending</h2>
-        </div>
-        <!-- Display all events user is attending-->
-        {% if events_attendee_user %}
-        <div class="card text-white bg-secondary my-2 mx-2">
-            <table class="table">
-                <thead class="thead-dark" style="color:rgb(255, 255, 255)">
-                    <tr>
-                        <th>Event Name</th>
-                        <th>Event Type</th>
-                        <th>Join Event</th>
-                    </tr>
-                </thead>
-                <tbody style="color:rgb(255, 255, 255)">
-                    {% for events_attending in events_attendee_user %}
-                    <tr>
-                        <td>{{ events_attending.event_desc }}</td>
-                        <td>{{ events_attending.event_type }}</td>
-                        <td> <a href="{{ url_for('attendee', id=events_attending.event_id) }}"><button type="button"
-                                    class="btn btn-light ">Join Session</button></a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div>No events currently being attended!</div>
-            {% endif %}
+        <div class="col-xs-12">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="card-header">
+                    <h2>Events Attending</h2>
+                </div>
+                <!-- Display all events user is attending-->
+                {% if events_attendee_user %}
+                <div class="card text-white bg-secondary my-2 mx-2">
+                    <table class="table">
+                        <thead class="thead-dark" style="color:rgb(255, 255, 255)">
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Event Type</th>
+                                <th>Join Event</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color:rgb(255, 255, 255)">
+                            {% for events_attending in events_attendee_user %}
+                            <tr>
+                                <td>{{ events_attending.event_desc }}</td>
+                                <td>{{ events_attending.event_type }}</td>
+                                <td> <a href="{{ url_for('attendee', id=events_attending.event_id) }}"><button
+                                            type="button" class="btn btn-light ">Join Session</button></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div>No events currently being attended!</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

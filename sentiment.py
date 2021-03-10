@@ -1,4 +1,5 @@
 from textblob import TextBlob
+from rake_nltk import Rake 
 import datetime
 from models import db, users, feedbackQuestions, feedback
 
@@ -156,7 +157,20 @@ def processFeedbackData(eventID):
     return generalScoreValues, labels, totalAverageScore
 
 
+def getKeyPhrases(eventID):
+    r = Rake()
+    feedbackQuery = feedback.query.filter_by(event_id = eventID).all()
+    messages = []
+    for x in range(0, len(feedbackQuery)):
+        currentFB = feedbackQuery[x]
+        messages.append(currentFB.message)
 
+    concat_messages = ' '.join(messages)
+    # Remove stop words from our text 
+    r.extract_keywords_from_text(concat_messages)
+    keyphrases = r.get_ranked_phrases()[0:5]
+    print(keyphrases)
+    return keyphrases
 
 
             

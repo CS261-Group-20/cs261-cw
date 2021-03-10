@@ -18,6 +18,10 @@
     .table-wrapper-scroll-y {
         display: block;
     }
+
+    .boxed {
+        border: 1px solid green;
+    }
 </style>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -75,6 +79,12 @@
         <div class="card text-white bg-dark mb-3 my-3 mx-3">
             <div class="card text-white bg-dark mb-3 my-3 mx-3">
                 <div class="scrollable">
+                    <div class="keyphrases">
+                        <h3>Keyphrases</h3>
+                        {% for keyphrase in keyphrases %}
+                        <li> {{keyphrase}} </li>
+                        {% endfor %}
+                    </div>
                     <div class="users">
                         <!-- Display all users present in session -->
                         <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
@@ -97,42 +107,43 @@
         </div>
 
         <div class="card text-white bg-dark mb-3 my-3 mx-3">
-            <div class="mood">
-                <h2> Overall Mood </h2>
-                {% if avg_score > -0.25 and avg_score < 0.25  %}
-                <h3 style="color:rgb(255, 255, 255)" > Neutral </h3>
-                {% elif avg_score > 0.25 %}
-                <h3 style="color:rgb(0, 255, 0)" > Positive </h3>
-                {% else %}
-                <h3 style="color:rgb(255, 0, 0)" > Negative </h3>
-                {% endif %}
-            </div>
-            <div class="feedback">
-                <!-- Display all feedback received -->
-                <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
-                {% if feedback_in_session %}
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                    <table class="table table-bordered table-sm">
-                        <thead style="color:rgb(255, 255, 255)">
-                            <tr>
-                                <th>Username</th>
-                                <th>Question</th>
-                                <th>Feedback</th>
-                                <th>Feedback Date</th>
-                            </tr>
-                        </thead>
-                        <tbody style="color:rgb(255, 255, 255)">
-                            {% for feedback in feedback_in_session %}
-                            <tr>
-                                <td>{{ feedback.username }}</td>
-                                <td>{{ feedback.feedback_question}}</td>
-                                <td>{{ feedback.message }}</td>
-                                <td> {{feedback.feedback_date}} </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% endif %}
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="mood">
+                    <h2> Overall Mood </h2>
+                    {% if avg_score > -0.25 and avg_score < 0.25 %} <h3 style="color:rgb(255, 255, 255)"> Neutral </h3>
+                        {% elif avg_score > 0.25 %}
+                        <h3 style="color:rgb(0, 255, 0)"> Positive </h3>
+                        {% else %}
+                        <h3 style="color:rgb(255, 0, 0)"> Negative </h3>
+                        {% endif %}
+                </div>
+                <div class="feedback">
+                    <!-- Display all feedback received -->
+                    <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
+                    {% if feedback_in_session %}
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-bordered table-sm">
+                            <thead style="color:rgb(255, 255, 255)">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Question</th>
+                                    <th>Feedback</th>
+                                    <th>Feedback Date</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color:rgb(255, 255, 255)">
+                                {% for feedback in feedback_in_session %}
+                                <tr>
+                                    <td>{{ feedback.username }}</td>
+                                    <td>{{ feedback.feedback_question}}</td>
+                                    <td>{{ feedback.message }}</td>
+                                    <td> {{feedback.feedback_date}} </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

@@ -14,7 +14,7 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 import json
-from sentiment import processFeedbackData
+from sentiment import processFeedbackData, getKeyPhrases
 
 
 app = Flask(__name__)
@@ -207,10 +207,12 @@ def host(id):
     feedback_counter = feedback.query.filter_by(event_id=id).count()
     if feedback_counter != 0:
         values, labels, avg_score = processFeedbackData(id)
+        keyphrases = getKeyPhrases(id)
     else:
         avg_score = 0
         values = []
         labels = []
+        keyphrases = []
     print(id)
     feedback_time = labels
     feedback_mood = values
@@ -267,7 +269,7 @@ def host(id):
         db.session.commit()
         return redirect(url_for('host', id=id))
     return render_template("host.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, event=event, feedback_in_session=feedback_in_session,
-                           id=id, plot=graphJSON, title='Score over time', labels=labels, values=values, avg_score = avg_score )
+                           id=id, plot=graphJSON, title='Score over time', labels=labels, values=values, avg_score = avg_score, keyphrases = keyphrases)
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 

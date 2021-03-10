@@ -247,6 +247,9 @@ def host(id):
         j = 0
 
     event = eventTable.query.filter_by(event_id=id).first()
+
+    #Set session variable
+    session["session_code"] = event.event_code
     form = HostForm()
 
     # Get list of all attendees in this session

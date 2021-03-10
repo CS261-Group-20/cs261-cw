@@ -34,8 +34,15 @@
 {% block body %}
 
 <div class="container-fluid ">
-    <div class="row justify-content-center">
-        <div class="col-xs-12">
+    <div class="row">
+        <!-- <div class="col-xs-12">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="session code">
+                    <h2 style="color:rgb(255, 255, 255)">Session Code: {{event.event_code}}</h2>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-sm-6">
             <div class="card text-white bg-dark mb-3 my-3 mx-3">
                 <div class="card text-white bg-dark mb-3 my-3 mx-3">
                     <div class="chart" id="bargraph">
@@ -43,7 +50,6 @@
                             var graphs = {{ plot | safe}};
                             Plotly.plot('bargraph', graphs, { displayModeBar: false });
                         </script>
-
                     </div>
                     <div class="questions-form">
                         <!-- Display all questions currently in form -->
@@ -73,80 +79,87 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-xs-12">
+    <div class="col-sm-6">
+        <div class="card text-white bg-dark mb-3 my-3 mx-3">
             <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                    <div class="scrollable">
-                        <div class="keyphrases">
-                            <h3>Keyphrases</h3>
-                            {% for keyphrase in keyphrases %}
-                            <li> {{keyphrase}} </li>
-                            {% endfor %}
-                        </div>
-                        <div class="users">
-                            <!-- Display all users present in session -->
-                            <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
-                            {% if user_host %}
-                            <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
-                            {% endif %}
-                            {% if users_in_session %}
-                            {% for users in users_in_session %}
-                            <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
-                            {% endfor %}
-                            {% endif %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="scrollable">
+                            <div class="keyphrases">
+                                <h3>Frequent Feedback</h3>
+                                {% for keyphrase in keyphrases %}
+                                <li> {{keyphrase}} </li>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-
-                    <div class="session code">
-                        <h1>Session Code</h1>
-                        <h2 style="color:rgb(255, 255, 255)">{{event.event_code}}</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                    <div class="mood">
-                        <h2> Overall Mood </h2>
-                        {% if avg_score > -0.25 and avg_score < 0.25 %} <h3 style="color:rgb(255, 255, 255)"> Neutral
-                            </h3>
-                            {% elif avg_score > 0.25 %}
-                            <h3 style="color:rgb(0, 255, 0)"> Positive </h3>
-                            {% else %}
-                            <h3 style="color:rgb(255, 0, 0)"> Negative </h3>
-                            {% endif %}
-                    </div>
-                    <div class="feedback">
-                        <!-- Display all feedback received -->
-                        <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
-                        {% if feedback_in_session %}
-                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                            <table class="table table-bordered table-sm">
-                                <thead style="color:rgb(255, 255, 255)">
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Question</th>
-                                        <th>Feedback</th>
-                                        <th>Feedback Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody style="color:rgb(255, 255, 255)">
-                                    {% for feedback in feedback_in_session %}
-                                    <tr>
-                                        <td>{{ feedback.username }}</td>
-                                        <td>{{ feedback.feedback_question}}</td>
-                                        <td>{{ feedback.message }}</td>
-                                        <td> {{feedback.feedback_date}} </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            {% endif %}
+                    <div class="col-sm-6">
+                        <div class="session code">
+                            <h2 style="color:rgb(255, 255, 255)">Session Code: {{event.event_code}}</h2>
                         </div>
                     </div>
                 </div>
+
             </div>
+        </div>
+
+        <div class="card text-white bg-dark mb-3 my-3 mx-3">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="mood">
+                    <h2> Overall Mood </h2>
+                    {% if avg_score > -0.25 and avg_score < 0.25 %} <h3 style="color:rgb(255, 255, 255)"> Neutral
+                        </h3>
+                        {% elif avg_score > 0.25 %}
+                        <h3 style="color:rgb(0, 255, 0)"> Positive </h3>
+                        {% else %}
+                        <h3 style="color:rgb(255, 0, 0)"> Negative </h3>
+                        {% endif %}
+                </div>
+                <div class="feedback">
+                    <!-- Display all feedback received -->
+                    <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
+                    {% if feedback_in_session %}
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-bordered table-sm">
+                            <thead style="color:rgb(255, 255, 255)">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Question</th>
+                                    <th>Feedback</th>
+                                    <th>Feedback Date</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color:rgb(255, 255, 255)">
+                                {% for feedback in feedback_in_session %}
+                                <tr>
+                                    <td>{{ feedback.username }}</td>
+                                    <td>{{ feedback.feedback_question}}</td>
+                                    <td>{{ feedback.message }}</td>
+                                    <td> {{feedback.feedback_date}} </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 my-3 mx-3"> 
+        <div class="users">
+            <!-- Display all users present in session -->
+            <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+            {% if user_host %}
+            <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+            {% endif %}
+            {% if users_in_session %}
+            {% for users in users_in_session %}
+            <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+            {% endfor %}
+            {% endif %}
+        </div>
         </div>
     </div>
 </div>

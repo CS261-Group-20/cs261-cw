@@ -26,6 +26,11 @@
         <li class="nav-item">
             <a class="nav-link" href="/logout" style="color:rgb(255, 255, 255)">Logout</a>
         </li>  
+        {% if session['event_code'] %}
+        <li class="nav-item">
+          <h5>{{session['event_code']}}</h5>
+        </li> 
+        {% endif %}
       </ul>
   </nav>
 

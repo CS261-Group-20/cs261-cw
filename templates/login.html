@@ -1,19 +1,43 @@
 {% extends 'base.html' %}
+{% include 'navbar.html' %}
+{% from "_formhelpers.html" import render_field %}
 
 {% block head %}
-<h1>This is the Login page</h1> 
+<!-- <h1>This is the Login page</h1>  -->
 {% endblock %}
 
 {% block body %}
 <!-- <p>Change this later, this is very basic html code</p> -->
-<div class="login-form">
-    <form method = "POST" action="/login">
-        {{form.hidden_tag()}}
-        {{form.username.label}}
-        {{form.username}}<br>
-        {{form.password.label}}
-        {{form.password}}<br>
-        {{form.submit}}
-    </form>
-</div>
+
+
+<body>
+    <div class="container-fluid">
+        <div class="card text-white bg-dark mb-3">
+            <div class="login-form">
+                <form method="POST" action="/login">
+                    <div class="form-group">
+                        <!-- Render username and password fields and submit button-->
+                        {{form.hidden_tag()}}
+                        <h5>{{form.username.label}}</h5>
+                        {{ render_field(form.username, class='form-control', placeholder='Username') }}
+                        <h5>{{form.password.label}}</h5>
+                        {{ render_field(form.password, class='form-control', placeholder='Password') }}
+                        {{ render_field(form.submit, class='btn btn-success', placeholder='Password') }}
+                    </div>
+                </form>
+            </div>
+            <div class="flash">
+                <!-- Display all flashed messages -->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for msg in messages %}
+                <h2 style="color:rgb(255, 255, 255)">{{msg}}</h2>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+</body>
 {% endblock %}

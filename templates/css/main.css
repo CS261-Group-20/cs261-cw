@@ -1,0 +1,7 @@
+@font-face{
+    font-family: trial;
+    src: url('http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
+    font-weight: bold;}
+    
+    body {font-family: georgia; color:rgb(255, 255, 255)}
+    h1 {font-family:trial; color: rgb(255, 255, 255)}

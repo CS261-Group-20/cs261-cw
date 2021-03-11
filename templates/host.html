@@ -1,17 +1,166 @@
+<!-- {% include 'navbar.html' %} -->
 {% extends 'base.html' %}
-
+{% from "_formhelpers.html" import render_field %}
 {% block head %}
-<h1>This is the Host page</h1> 
+<!-- <h1>This is the Host page</h1> -->
+<style>
+    .scrollable {
+        overflow-y: auto;
+        max-height: 300px;
+    }
+
+    .my-custom-scrollbar {
+        position: relative;
+        height: 200px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+
+    .boxed {
+        border: 1px solid green;
+    }
+</style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+<meta http-equiv="refresh" content="30">
 {% endblock %}
 
+
 {% block body %}
-<!-- <p>Change this later, this is very basic html code</p> -->
-<div class="login-form">
-    <form method = "POST" action="host">
-        {{form.hidden_tag()}}
-        {{form.add_feedback_question.label}}
-        {{form.add_feedback_question}}<br>
-        {{form.submit}}
-    </form>
+
+<div class="container-fluid ">
+    <div class="row">
+        <!-- <div class="col-xs-12">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="session code">
+                    <h2 style="color:rgb(255, 255, 255)">Session Code: {{event.event_code}}</h2>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-sm-6">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                    <div class="chart" id="bargraph">
+                        <script>
+                            var graphs = {{ plot | safe}};
+                            Plotly.plot('bargraph', graphs, { displayModeBar: false });
+                        </script>
+                    </div>
+                    <div class="questions-form">
+                        <!-- Display all questions currently in form -->
+                        <!-- <h5 class="card-title">Card title</h5> -->
+                        <h2 class="card-title"">Current Questions</h2>
+                    <div class=" current_questions">
+                            {% if questions_in_session %}
+                            {% for questions in questions_in_session %}
+                            <li style="color:rgb(255, 255, 255)">{{questions.feedback_question}}
+                                {% if loop.index0 != 0 %}
+                                <a
+                                    href="{{ url_for('delete_question', q_id=questions.feedback_question_id, event_id = id) }}">
+                                    <buttontype="button" class="btn btn-danger ">Delete Question</button>
+                                </a>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                            {% endif %}
+                    </div>
+
+                    <!-- Render add_feedback_question field and submit button-->
+                    <form method="POST">
+                        <h5>{{form.add_feedback_question.label}}</h5>
+                        {{ render_field(form.add_feedback_question, class='form-control') }}
+                        {{ render_field(form.submit, class='btn btn-success') }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="card text-white bg-dark mb-3 my-3 mx-3">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="scrollable">
+                            <div class="keyphrases">
+                                <h3>Frequent Feedback</h3>
+                                {% for keyphrase in keyphrases %}
+                                <li> {{keyphrase}} </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="session code">
+                            <h2 style="color:rgb(255, 255, 255)">Session Code: {{event.event_code}}</h2>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card text-white bg-dark mb-3 my-3 mx-3">
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="mood">
+                    <h2> Overall Mood </h2>
+                    {% if avg_score > -0.25 and avg_score < 0.25 %} <h3 style="color:rgb(255, 255, 255)"> Neutral
+                        </h3>
+                        {% elif avg_score > 0.25 %}
+                        <h3 style="color:rgb(0, 255, 0)"> Positive </h3>
+                        {% else %}
+                        <h3 style="color:rgb(255, 0, 0)"> Negative </h3>
+                        {% endif %}
+                </div>
+                <div class="feedback">
+                    <!-- Display all feedback received -->
+                    <h2 style="color:rgb(255, 255, 255)">Current Feedback</h2>
+                    {% if feedback_in_session %}
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-bordered table-sm">
+                            <thead style="color:rgb(255, 255, 255)">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Question</th>
+                                    <th>Feedback</th>
+                                    <th>Feedback Date</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color:rgb(255, 255, 255)">
+                                {% for feedback in feedback_in_session %}
+                                <tr>
+                                    <td>{{ feedback.username }}</td>
+                                    <td>{{ feedback.feedback_question}}</td>
+                                    <td>{{ feedback.message }}</td>
+                                    <td> {{feedback.feedback_date}} </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card text-white bg-dark mb-3 my-3 mx-3"> 
+        <div class="users">
+            <!-- Display all users present in session -->
+            <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+            {% if user_host %}
+            <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+            {% endif %}
+            {% if users_in_session %}
+            {% for users in users_in_session %}
+            <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+            {% endfor %}
+            {% endif %}
+        </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -177,9 +177,10 @@ def getKeyPhrases(eventID):
     concat_messages = ' '.join(messages)
     # Remove stop words from our text
     r.extract_keywords_from_text(concat_messages)
+    # Get the ranked phrases
     keyphrases = r.get_ranked_phrases()[0:5]
 
+    # Remove punctuation from our final keyphrases
     for x in range(0, len(keyphrases)):
         keyphrases[x] = keyphrases[x].strip(string.punctuation)
-    print(keyphrases)
     return keyphrases

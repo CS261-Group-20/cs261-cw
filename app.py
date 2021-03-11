@@ -10,8 +10,6 @@ from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinF
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
 import plotly
 import plotly.graph_objs as go
-import pandas as pd
-import numpy as np
 import json
 from sentiment import processFeedbackData, getKeyPhrases
 

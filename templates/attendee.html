@@ -37,11 +37,14 @@
                                 <h5>{{questions.question.label}}</h5>
                                 {{ render_field(questions.question, class='form-control') }}
                                 {% endfor %}
-                                <!-- Render mood_type field from form and submit button-->
-                                <h5>{{form.mood_type.label}}</h5>
-                                {{ render_field(form.mood_type, class='lass="form-check-input"', placeholder='Mood') }}
+                                {% for subfield in form.mood_type %}
+                                <p>
+                                    {{ subfield }}
+                                    {{ subfield.label }}
+                                </p>
+                                {% endfor %}
                                 <h5>{{form.checkbox.label}}</h5>
-                                {{ render_field(form.checkbox, class='btn btn-success bold')}}
+                                {{ render_field(form.checkbox)}}
                                 {{ render_field(form.submit, class='btn btn-success bold')}}
                             </form>
                         </div>
@@ -50,17 +53,19 @@
             </div>
             <div class="col-xs-12">
                 <div class="card text-white bg-dark mb-3 my-3 mx-3">
-                    <div class="users">
-                        <!-- Display all users present in session -->
-                        <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
-                        {% if user_host %}
-                        <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
-                        {% endif %}
-                        {% if users_in_session %}
-                        {% for users in users_in_session %}
-                        <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
-                        {% endfor %}
-                        {% endif %}
+                    <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                        <div class="users">
+                            <!-- Display all users present in session -->
+                            <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+                            {% if user_host %}
+                            <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+                            {% endif %}
+                            {% if users_in_session %}
+                            {% for users in users_in_session %}
+                            <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

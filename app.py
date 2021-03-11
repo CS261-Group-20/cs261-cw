@@ -8,7 +8,6 @@ from collections import namedtuple
 from flask import Flask, render_template, redirect
 from forms import LoginForm, RegistrationForm, SessionCreationForm, SessionJoinForm, AttendeeForm, HostForm
 from models import db, users, eventTable, eventHosts, eventAttendees, feedbackQuestions, feedback
-# from flask_bootstrap import Bootstrap
 import plotly
 import plotly.graph_objs as go
 import pandas as pd
@@ -372,3 +371,4 @@ def delete_question(event_id, q_id):
 # Run app
 if __name__ == "__main__":
     app.run(debug=True)
+

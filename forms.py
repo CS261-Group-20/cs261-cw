@@ -34,7 +34,7 @@ class SessionQuestion(FlaskForm):
 
 class AttendeeForm(FlaskForm):
     feedback_questions = FieldList(FormField(SessionQuestion))
-    mood_type = RadioField('Mood', choices=[(1, ':D'),(2, ':I'),(3, ':(')],validators=[DataRequired()] )
+    mood_type = RadioField('Mood', choices=[(1, '\U0001F600'),(2, '\U0001F610'),(3, '\U0001F641')],validators=[DataRequired()] )
     checkbox = BooleanField('Send Anonymously', default=False)
     submit = SubmitField('Submit Feedback')
 

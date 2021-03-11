@@ -108,14 +108,15 @@
         <div class="card text-white bg-dark mb-3 my-3 mx-3">
             <div class="card text-white bg-dark mb-3 my-3 mx-3">
                 <div class="mood">
-                    <h2> Overall Mood </h2>
-                    {% if avg_score > -0.25 and avg_score < 0.25 %} <h3 style="color:rgb(255, 255, 255)"> Neutral
-                        </h3>
-                        {% elif avg_score > 0.25 %}
-                        <h3 style="color:rgb(0, 255, 0)"> Positive </h3>
-                        {% else %}
-                        <h3 style="color:rgb(255, 0, 0)"> Negative </h3>
-                        {% endif %}
+                    <h2> Overall Mood:
+                        {% if avg_score > -0.25 and avg_score < 0.25 %} <p style="color:rgb(255, 255, 255)"> Neutral
+                            </p>
+                            {% elif avg_score > 0.25 %}
+                            <p style="color:rgb(0, 255, 0)"> Positive </p>
+                            {% else %}
+                            <p style="color:rgb(255, 0, 0)"> Negative </p>
+                            {% endif %}
+                    </h2>
                 </div>
                 <div class="feedback">
                     <!-- Display all feedback received -->
@@ -147,20 +148,22 @@
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-dark mb-3 my-3 mx-3"> 
-        <div class="users">
-            <!-- Display all users present in session -->
-            <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
-            {% if user_host %}
-            <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
-            {% endif %}
-            {% if users_in_session %}
-            {% for users in users_in_session %}
-            <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
-            {% endfor %}
-            {% endif %}
-        </div>
-        </div>
+            <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                <div class="card text-white bg-dark mb-3 my-3 mx-3">
+                    <div class="users">
+                        <!-- Display all users present in session -->
+                        <h2 style="color:rgb(255, 255, 255)">Users in session</h2>
+                        {% if user_host %}
+                        <li style="color:rgb(255, 255, 255)">{{user_host.username}} (Host)</li>
+                        {% endif %}
+                        {% if users_in_session %}
+                        {% for users in users_in_session %}
+                        <li style="color:rgb(255, 255, 255)">{{users.username}}</li>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
 {% endblock %}

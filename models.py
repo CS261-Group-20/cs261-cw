@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy.sql.schema import PrimaryKeyConstraint
 db = SQLAlchemy()
 
+
 # Python file providing the model for our database schema
 
 class users(db.Model):

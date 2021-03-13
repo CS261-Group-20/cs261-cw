@@ -17,14 +17,11 @@ from sentiment import processFeedbackData, getKeyPhrases
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '68279'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///web_app.db'
-# bootstrap = Bootstrap(app)
 
 with app.app_context():
     db.init_app(app)
 
 # Default url route just redirects user to home webpage
-
-
 # here we define our menu items
 
 
@@ -58,6 +55,7 @@ def login():
                 session["user_id"] = user.user_id
                 flash('Welcome %s' % username_form)
                 return redirect('/user_homepage')
+
         # else display invalid login message and prompt user for login again
         flash('Invalid Login!')
     return render_template("login.html", form=form)
@@ -92,15 +90,6 @@ def register():
         db.session.commit()
         return redirect('/login')
     return render_template("register.html", form=form)
-
-
-@app.route('/user', methods=['GET', 'POST'])
-def user():
-    if "user_id" in session:
-        user = users.query.filter_by(user_id=session["user_id"]).first()
-        return str(session["user_id"])
-    else:
-        return "not logged in"
 
 # Logout url route removes user from session and redirects user to homepage
 
@@ -201,6 +190,7 @@ def session_join():
 @app.route('/host/<id>', methods=['GET', 'POST'])
 def host(id):
 
+    # Get sentiment analysis for feedback
     feedback_counter = feedback.query.filter_by(event_id=id).count()
     if feedback_counter != 0:
         values, labels, avg_score = processFeedbackData(id)
@@ -210,12 +200,12 @@ def host(id):
         values = []
         labels = []
         keyphrases = []
-    print(id)
     feedback_time = labels
     feedback_mood = values
     positive_mood = []
     negative_mood = []
 
+    # Display sentiment on graph with green showing positive sentiment and red showing negative sentiment
     for mood in feedback_mood:
         if mood >= 0:
             positive_mood.append(mood)
@@ -226,9 +216,9 @@ def host(id):
 
     fig = go.Figure()
     fig.add_trace(go.Bar(x=feedback_time, y=positive_mood,
-                         marker_color='green', name='Positive<br>Feedback'))
+                        marker_color='green', name='Positive<br>Feedback'))
     fig.add_trace(go.Bar(x=feedback_time, y=negative_mood,
-                         marker_color='red', name='Negative<br>Feedback'))
+                        marker_color='red', name='Negative<br>Feedback'))
     fig.update_layout(barmode='relative', title_text='Mood Over Time')
     fig.update_yaxes(range=[-1, 1])
 
@@ -269,7 +259,7 @@ def host(id):
         db.session.commit()
         return redirect(url_for('host', id=id))
     return render_template("host.html", form=form, users_in_session=users_in_session, user_host=user_host, questions_in_session=questions_in_session, event=event, feedback_in_session=feedback_in_session,
-                           id=id, plot=graphJSON, title='Score over time', labels=labels, values=values, avg_score = avg_score, keyphrases = keyphrases)
+                        id=id, plot=graphJSON, title='Score over time', labels=labels, values=values, avg_score = avg_score, keyphrases = keyphrases)
 
 # Attendee url route renders the attendee page and allows attendees to submit feedback
 
@@ -285,7 +275,6 @@ def attendee(id):
         j = 1
 
     # Get list of all users in this session
-    # TODO
     # Get list of all attendees in this session
     users_in_session = users.query.join(eventAttendees, users.user_id == eventAttendees.user_id).filter(
         eventAttendees.event_id == id).all()
@@ -323,14 +312,11 @@ def attendee(id):
                 feedback_time = datetime.datetime.strptime(
                     datetime.datetime.now().strftime("%d-%m-%Y, %H:%M:%S"), fmt)
                 if is_anon:
-                    new_feedback = feedback(
-                        j, field.question_id, id, 0, message, feedback_time, mood, 1, 1)
+                    new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, mood, 1, 1)
                 elif "user_id" in session:
-                    new_feedback = feedback(
-                        j, field.question_id, id, session["user_id"], message, feedback_time, mood, 1, 0)
+                    new_feedback = feedback(j, field.question_id, id, session["user_id"], message, feedback_time, mood, 1, 0)
                 else:
-                    new_feedback = feedback(
-                        j, field.question_id, id, 0, message, feedback_time, mood, 1, 0)
+                    new_feedback = feedback(j, field.question_id, id, 0, message, feedback_time, mood, 1, 0)
                 db.session.add(new_feedback)
                 db.session.commit()
                 j += 1
@@ -353,7 +339,7 @@ def user_homepage():
         flash('Not logged in!')
         return redirect(url_for('login'))
 
-# The user_homepage url route provides the user with a list of all sessions in which the user is present as a host or as an attendee
+# The delete_question url route deletes the question specified by the host
 
 
 @app.route('/delete_question/<event_id>/<q_id>', methods=['GET', 'POST'])

@@ -38,3 +38,8 @@ A session can be joined without logging in, all you need is the session code.
 However login is required to host a session or access the user homepage.
 
 Once you host a session you will see the session code on the screen and from there it's just about receiving and looking at feedback.
+
+You can see an example of a running session as a host by logging in with username "John Smith" and password "pass" and joining the session "Life Lessons With John Smith" where you can see past feedback and add questions to the session.
+
+If you wish to enter that session as a attendee, just join a session from the Join Session page with code "D1H4LSOL"
+
